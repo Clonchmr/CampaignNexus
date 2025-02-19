@@ -8,5 +8,5 @@ public class CharacterItem
     public int CharacterId { get; set; }
     public Character Character { get; set; }
     public int Quantity { get; set; }
-    public bool IsEquipped { get; set; }
+    public bool IsEquipped { get; set; } = false;
 }

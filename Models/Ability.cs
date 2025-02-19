@@ -11,8 +11,8 @@ public class Ability
     public string AbilityType { get; set; }
     [Required]
     public string AbilityDescription { get; set; }
-    public int DiceNumber { get; set ;}
-    public int NumberOfDice { get; set; }
+    public int? DiceNumber { get; set ;}
+    public int? NumberOfDice { get; set; }
     public string CastingTime { get; set; }
     [Required]
     public string Range { get; set; }

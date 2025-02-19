@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CampaignNexus.Models;
 
@@ -9,6 +10,7 @@ public class Character
         return (abilityScore - 10) /2;
     }
     public int Id { get; set; }
+    [ForeignKey("UserProfile")]
     public int UserId { get; set; }
     public UserProfile UserProfile { get; set ;}
     [Required]
@@ -24,7 +26,7 @@ public class Character
     public Species Species { get; set; }
     public int ClassId { get; set; }
     public Class Class { get; set; }
-    public int? SubClassId { get; set ;}
+    public int? SubClassId { get; set ;} = null;
     public SubClass SubClass { get; set; }
     public int Level { get; set; } = 1;
     private int _hitPoints;
@@ -75,7 +77,10 @@ public class Character
     public Alignment Alignment { get; set; }
     public string Backstory { get; set; }
     public string CharacterPicUrl { get; set; }
+    public ICollection<CharacterItem> CharacterItems { get; set; }
     public ICollection<Item> Items { get; set; }
     public ICollection<CharacterAbility> CharacterAbilities { get; set; }
+    public ICollection<Ability> Abilities { get; set; }
+    public ICollection<CharacterCampaign> CharacterCampaigns { get; set; }
     public ICollection<Campaign> Campaigns { get; set; }
 }

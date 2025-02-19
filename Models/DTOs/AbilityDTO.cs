@@ -6,8 +6,8 @@ public class AbilityDTO
     public string AbilityName { get; set; }
     public string AbilityType { get; set; }
     public string AbilityDescription { get; set; }
-    public int DiceNumber { get; set; }
-    public int NumberOfDice { get; set; }
+    public int? DiceNumber { get; set; }
+    public int? NumberOfDice { get; set; }
     public string CastingTime { get; set; }
     public string Range { get; set; }
     public string SavingThrow { get; set; }

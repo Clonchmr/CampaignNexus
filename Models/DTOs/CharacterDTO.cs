@@ -40,9 +40,16 @@ public class CharacterDTO
     public AlignmentDTO Alignment { get; set; }
     public string Backstory { get; set; }
     public string CharacterPicUrl { get; set; }
+    public ICollection<CharacterItemDTO> CharacterItems { get; set; }
     public ICollection<ItemDTO> Items { get; set; }
     public ICollection<CharacterAbilityDTO> CharacterAbilities { get; set; }
+    public ICollection<AbilityDTO> Abilities { get; set; }
     public ICollection<CampaignDTO> Campaigns { get; set; }
 
-    //need to add equipped weight calculated property
+    public double TotalWeight {
+        get 
+        {
+            return CharacterItems.Sum(i => i.Item.Weight * i.Quantity);
+        }
+    }
 }
