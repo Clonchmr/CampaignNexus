@@ -4,26 +4,26 @@
 
 This project is built using the following technologies:
 
-- **Frontend:** [React]("https://react.dev/")
+- **Frontend:** [React](https://react.dev/)
 
-- **Backend:** [C#]("https://learn.microsoft.com/en-us/dotnet/csharp/"), [ASP.NET Core]("https://learn.microsoft.com/en-us/aspnet/core/")
-- **Database:** [PostgreSQL]("https://www.postgresql.org/")
-- **ORM:** [Entity Framework Core]("https://learn.microsoft.com/en-us/ef/core/")
+- **Backend:** [C#](https://learn.microsoft.com/en-us/dotnet/csharp/), [ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/)
+- **Database:** [PostgreSQL](https://www.postgresql.org/)
+- **ORM:** [Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/)
 
 ## Libraries & Tools
 
-- **Routing:** [React Router DOM]("https://reactrouter.com/")
-- **UI Framework:** [React Bootstrap]("https://react-bootstrap.netlify.app/")
-- **Icons:** [Font Awesome]("https://fontawesome.com/")
-- **Image Hosting:** [Cloudinary]("https://cloudinary.com/")
+- **Routing:** [React Router DOM](https://reactrouter.com/)
+- **UI Framework:** [React Bootstrap](https://react-bootstrap.netlify.app/)
+- **Icons:** [Font Awesome](https://fontawesome.com/)
+- **Image Hosting:** [Cloudinary](https://cloudinary.com/)
 
 ## Requirements
 
 - **Node.js**:
-  [Download Node.js]("https://nodejs.org/")
+  [Download Node.js](https://nodejs.org/)
 - **npm** (comes with Node.js)
-- **.NET SDK** [Download .NET]("https://dotnet.microsoft.com/download")
-- **PostgreSQL** [Download PostgreSQL]("https://www.enterprisedb.com/downloads/postgres-postgresql-downloads")
+- **.NET SDK** [Download .NET](https://dotnet.microsoft.com/download)
+- **PostgreSQL** [Download PostgreSQL](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads)
 
 To work with migrations and to run commands like dotnet ef database update, you'll need the EF Core tools:
 
