@@ -75,7 +75,7 @@ button:focus-visible {
   border: 1px solid var(--primary);
 }
 .btn-primary:hover {
-  background-color: var(--btn-primary-hover);
+  background-color: transparent;
   color: var(--primary);
   border: 2px solid var(--primary);
   font-weight: bold;
