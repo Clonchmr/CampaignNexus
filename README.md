@@ -22,7 +22,7 @@ This project is built using the following technologies:
 - **Node.js**:
   [Download Node.js](https://nodejs.org/)
 - **npm** (comes with Node.js)
-- **.NET SDK** [Download .NET](https://dotnet.microsoft.com/download)
+- **.NET SDK (8.0)** [Download .NET](https://dotnet.microsoft.com/download)
 - **PostgreSQL** [Download PostgreSQL](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads)
 
 To work with migrations and to run commands like dotnet ef database update, you'll need the EF Core tools:
@@ -34,6 +34,7 @@ dotnet tool install --global dotnet-ef --framework net8.0
 ## Setup Instructions
 
 To get started with this project, follow these steps:
+//need put migrations folder into gitignore and include initial migration into instructions
 
 ### 1. Clone the repository
 
