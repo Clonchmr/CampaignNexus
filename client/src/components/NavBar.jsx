@@ -1,6 +1,7 @@
 import {
   Button,
   Container,
+  Form,
   Image,
   Nav,
   Navbar,
@@ -10,13 +11,19 @@ import {
 import { NavLink } from "react-router-dom";
 import logo from "../assets/images/CampaignNexusLogo.webp";
 import { logout } from "../managers/authManager";
+import { useContext } from "react";
+import { ThemeContext } from "../ThemeContext/ThemeContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const NavBar = ({ loggedInUser, setLoggedInUser }) => {
+  const { darkMode, setDarkMode } = useContext(ThemeContext);
+
+  const themeClass = darkMode ? "dark" : "light";
   return (
     <Navbar
-      bg="light"
-      data-bs-theme="light"
       expand="lg"
+      bg={themeClass}
+      data-bs-theme={themeClass}
       fixed="top"
       className="fs-4"
     >
@@ -42,13 +49,21 @@ export const NavBar = ({ loggedInUser, setLoggedInUser }) => {
               </NavDropdown>
               <Nav.Link href="/campaigns/create">Create Campaign</Nav.Link>
             </Nav>
-            <Nav>
+            <Nav className="me-auto">
+              <Form>
+                <Form.Check
+                  type="switch"
+                  id="darkMode-switch"
+                  onChange={() => setDarkMode(!darkMode)}
+                  label={darkMode ? "🌙" : "🔆"}
+                />
+              </Form>
               {loggedInUser ? (
                 <Button
-                  variant="outline-danger"
+                  className="btn-primary"
                   onClick={() => logout().then(() => setLoggedInUser(null))}
                 >
-                  Logout
+                  Log Out
                 </Button>
               ) : (
                 <Nav.Link as={NavLink} href="/login">
