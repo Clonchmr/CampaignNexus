@@ -1,0 +1,13 @@
+:root {
+  /*Light theme variables */
+  --bg-image: url("../assets/images/LightThemeBackground.jpg");
+  --primary: #96031a;
+  --btn-primary-hover: white;
+}
+
+[data-theme="dark"] {
+  /* Dark theme variables */
+  --bg-image: url("../assets/images/DarkThemeBackground.webp");
+  --primary: #6e0d25;
+  --btn-primary-hover: #201d1e;
+}
