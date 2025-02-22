@@ -3,6 +3,9 @@
   --bg-image: url("../assets/images/LightThemeBackground.jpg");
   --primary: #96031a;
   --btn-primary-hover: white;
+  --card-background: #ceb28d;
+  --card-text: #201d1e;
+  --card-border: #774e24;
 }
 
 [data-theme="dark"] {
@@ -10,4 +13,7 @@
   --bg-image: url("../assets/images/DarkThemeBackground.webp");
   --primary: #6e0d25;
   --btn-primary-hover: #201d1e;
+  --card-background: #201d1e;
+  --card-text: white;
+  --card-border: #dcab6b;
 }

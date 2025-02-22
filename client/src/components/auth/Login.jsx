@@ -42,7 +42,7 @@ export default function Login({ setLoggedInUser }) {
             onChange={(e) => setPassword(e.target.value)}
           />
         </Form.Group>
-        <Button variant="primary" className="my-2" type="submit">
+        <Button className="my-2 btn-primary" type="submit">
           Login
         </Button>
       </Form>

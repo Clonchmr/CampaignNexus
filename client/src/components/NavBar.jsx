@@ -11,14 +11,19 @@ import {
 import { NavLink } from "react-router-dom";
 import logo from "../assets/images/CampaignNexusLogo.webp";
 import { logout } from "../managers/authManager";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ThemeContext } from "../ThemeContext/ThemeContext";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { getCampaignsByUser } from "../managers/campaignManager";
 
 export const NavBar = ({ loggedInUser, setLoggedInUser }) => {
   const { darkMode, setDarkMode } = useContext(ThemeContext);
+  const [userCampaigns, setUserCampaigns] = useState([]);
 
   const themeClass = darkMode ? "dark" : "light";
+
+  useEffect(() => {
+    getCampaignsByUser(loggedInUser.id, 3, true).then(setUserCampaigns);
+  }, [loggedInUser.id]);
   return (
     <Navbar
       expand="lg"
@@ -46,6 +51,14 @@ export const NavBar = ({ loggedInUser, setLoggedInUser }) => {
             <Nav className="me-auto flex-grow-1 pe-3">
               <NavDropdown title="Campaigns" id="campaignsDropdown">
                 <NavDropdown.Item href="/campaigns">View All</NavDropdown.Item>
+                {userCampaigns.map((c) => (
+                  <NavDropdown.Item
+                    key={`Campaign-${c.id}`}
+                    href={`/campaigns/${c.id}`}
+                  >
+                    {c.campaignName}
+                  </NavDropdown.Item>
+                ))}
               </NavDropdown>
               <Nav.Link href="/campaigns/create">Create Campaign</Nav.Link>
             </Nav>
