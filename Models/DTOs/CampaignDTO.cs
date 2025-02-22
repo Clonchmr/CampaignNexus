@@ -8,7 +8,7 @@ public class CampaignDTO
     public int Id { get; set; }
     public int OwnerId { get; set; }
     [ForeignKey("OwnerId")]
-    public UserProfile Owner { get; set; }
+    public UserProfileDTO Owner { get; set; }
     [Required]
     public string CampaignName { get; set; }
     [Required]

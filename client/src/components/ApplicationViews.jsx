@@ -4,6 +4,7 @@ import Register from "./auth/Register";
 import { NavBar } from "./NavBar";
 import { Container } from "react-bootstrap";
 import { AuthorizedRoute } from "./auth/AuthorizedRoute";
+import { UserCampaigns } from "./Campaign/UserCampaigns";
 
 export const ApplicationViews = ({ loggedInUser, setLoggedInUser }) => {
   return (
@@ -35,7 +36,7 @@ export const ApplicationViews = ({ loggedInUser, setLoggedInUser }) => {
             index
             element={
               <AuthorizedRoute loggedInUser={loggedInUser}>
-                Campaigns
+                <UserCampaigns loggedInUser={loggedInUser} />
               </AuthorizedRoute>
             }
           />
