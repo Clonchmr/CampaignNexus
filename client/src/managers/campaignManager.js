@@ -33,3 +33,14 @@ export const getCampaignsByUser = async (
 
   return response.json();
 };
+
+//Gets a single campaign by its Id
+export const getCampaignById = async (id) => {
+  const response = await fetch(`${_apiString}/${id}`);
+
+  if (!response.ok) {
+    throw new Error(`HTTP Error! Status: ${response.status}`);
+  }
+
+  return response.json();
+};

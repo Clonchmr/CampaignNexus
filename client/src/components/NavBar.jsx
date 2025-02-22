@@ -14,6 +14,7 @@ import { logout } from "../managers/authManager";
 import { useContext, useEffect, useState } from "react";
 import { ThemeContext } from "../ThemeContext/ThemeContext";
 import { getCampaignsByUser } from "../managers/campaignManager";
+import "../styles/nav.css";
 
 export const NavBar = ({ loggedInUser, setLoggedInUser }) => {
   const { darkMode, setDarkMode } = useContext(ThemeContext);
@@ -41,6 +42,7 @@ export const NavBar = ({ loggedInUser, setLoggedInUser }) => {
           id="offcanvasNavbar"
           aria-labelledby="offcanvasNavbarLabel"
           placement="end"
+          className={darkMode ? "offcanvas-dark" : "offcanvas-light"}
         >
           <Offcanvas.Header closeButton>
             <Offcanvas.Title id="offcanvasNavbar-title">

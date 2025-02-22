@@ -81,4 +81,78 @@ public class CampaignController : ControllerBase
             return StatusCode(500, "An error occurred processing your request.");
         }
     }
+
+    //Gets a campaign by its Id
+    //Includes Characters, and Logs
+    [HttpGet("{id}")]
+    [Authorize]
+    public IActionResult GetById(int id) 
+    {
+        try
+        {
+            Campaign campaign = _dbContext
+            .Campaigns
+            .Include(c => c.CampaignLogs)
+            .Include(c => c.Owner)
+                .ThenInclude(o => o.IdentityUser)
+            .Include(c => c.CharacterCampaigns)
+                .ThenInclude(cc => cc.Character)
+                    .ThenInclude(character => character.UserProfile)
+                        .ThenInclude(up => up.IdentityUser)
+            .SingleOrDefault(c => c.Id == id);
+
+            if (campaign == null)
+            {
+                return NotFound("That campaign does not exist");
+            }
+
+            return Ok(new CampaignDTO
+            {
+                Id = id,
+                OwnerId = campaign.OwnerId,
+                Owner = new UserProfileDTO
+                {
+                    Id = campaign.OwnerId,
+                    FirstName = campaign.Owner.FirstName,
+                    LastName = campaign.Owner.LastName,
+                    Email = campaign.Owner.IdentityUser.Email,
+                    UserName = campaign.Owner.IdentityUser.UserName
+                },
+                CampaignName = campaign.CampaignName,
+                CampaignDescription = campaign.CampaignDescription,
+                LevelRange = campaign.LevelRange,
+                StartDate = campaign.StartDate,
+                EndDate = campaign.EndDate != null ? campaign.EndDate : null,
+                CampaignPicUrl = campaign.CampaignPicUrl,
+                Characters = campaign.Characters != null ? campaign.Characters.Select(character => new CharacterDTO
+                {
+                    Id = character.Id,
+                    UserId = character.UserId,
+                    UserProfile = new UserProfileDTO
+                    {
+                        Id = character.UserProfile.Id,
+                        FirstName = character.UserProfile.FirstName,
+                        LastName = character.UserProfile.LastName,
+                        Email = character.UserProfile.IdentityUser.Email,
+                        UserName = character.UserProfile.IdentityUser.Email
+                    },
+                    Name = character.Name
+                }).ToList() : null,
+                CampaignLogs = campaign.CampaignLogs != null ? campaign.CampaignLogs.Select(l => new CampaignLogDTO
+                {
+                    Id = l.Id,
+                    CampaignId = id,
+                    Title = l.Title,
+                    Body = l.Body,
+                    Date = l.Date
+                }).ToList() : null
+            });
+            
+        }
+        catch(Exception ex)
+        {
+            Console.Error.WriteLine($"Error in GetById {ex}");
+            return StatusCode(500, "There was an error processing your request");
+        }
+    }
 }

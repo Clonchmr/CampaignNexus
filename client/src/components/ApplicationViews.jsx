@@ -5,6 +5,7 @@ import { NavBar } from "./NavBar";
 import { Container } from "react-bootstrap";
 import { AuthorizedRoute } from "./auth/AuthorizedRoute";
 import { UserCampaigns } from "./Campaign/UserCampaigns";
+import { CampaignDetails } from "./Campaign/CampaignDetails";
 
 export const ApplicationViews = ({ loggedInUser, setLoggedInUser }) => {
   return (
@@ -44,7 +45,7 @@ export const ApplicationViews = ({ loggedInUser, setLoggedInUser }) => {
             path=":id"
             element={
               <AuthorizedRoute loggedInUser={loggedInUser}>
-                Campaign By Id
+                <CampaignDetails loggedInUser={loggedInUser} />
               </AuthorizedRoute>
             }
           />
