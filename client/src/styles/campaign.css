@@ -2,3 +2,26 @@
   cursor: pointer;
   box-shadow: 0 0 0.3rem black;
 }
+
+.campaignDetails-container {
+  /* background-color: #774e24; */
+  border: 4px ridge #6e0d25;
+  border-radius: 1rem;
+  padding: 2rem 1rem;
+}
+
+.campaignDetails-description-container {
+  width: 80%;
+}
+
+#campaign-logs-h4 {
+  width: 71%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (min-width: 1151px) {
+  #campaign-edit-btn {
+    float: right;
+  }
+}

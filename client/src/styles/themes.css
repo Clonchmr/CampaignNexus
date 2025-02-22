@@ -6,6 +6,8 @@
   --card-background: #ceb28d;
   --card-text: #201d1e;
   --card-border: #774e24;
+  --text-color: #201d1e;
+  --text-shadow: white;
 }
 
 [data-theme="dark"] {
@@ -16,4 +18,6 @@
   --card-background: #201d1e;
   --card-text: white;
   --card-border: #dcab6b;
+  --text-color: #fff1d0;
+  --text-shadow: black;
 }
