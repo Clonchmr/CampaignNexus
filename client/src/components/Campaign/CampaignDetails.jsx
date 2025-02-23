@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getCampaignById } from "../../managers/campaignManager";
 import { Button, Card, Col, Container, Image, Row } from "react-bootstrap";
 import "../../styles/campaign.css";
@@ -9,6 +9,8 @@ export const CampaignDetails = ({ loggedInUser }) => {
 
   const { id } = useParams();
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     getCampaignById(id).then(setCampaign);
   }, [id]);
@@ -16,7 +18,11 @@ export const CampaignDetails = ({ loggedInUser }) => {
     <Container>
       <Container className="campaignDetails-container mt-5">
         {campaign.ownerId === loggedInUser.id && (
-          <Button id="campaign-edit-btn" className="btn-primary">
+          <Button
+            id="campaign-edit-btn"
+            className="btn-primary"
+            onClick={() => navigate(`/campaigns/${campaign.id}/edit`)}
+          >
             Edit Campaign
           </Button>
         )}

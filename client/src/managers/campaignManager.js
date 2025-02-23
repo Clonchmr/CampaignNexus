@@ -62,3 +62,19 @@ export const postNewCampaign = async (campaignObj) => {
 
   return response.json();
 };
+
+//Edits an existing campaign
+//Expects a campaign object with the campaigns id
+export const editCampaign = async (campaignObj) => {
+  const response = await fetch(`${_apiString}/${campaignObj.id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(campaignObj),
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP Error! Status: ${response.status}`);
+  }
+};

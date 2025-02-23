@@ -9,6 +9,7 @@ import { CampaignDetails } from "./Campaign/CampaignDetails";
 import { CreateCampaign } from "./Campaign/CreateCampaign";
 import { ThemeContext } from "../ThemeContext/ThemeContext";
 import { useContext } from "react";
+import { EditCampaign } from "./Campaign/EditCampaign";
 
 export const ApplicationViews = ({ loggedInUser, setLoggedInUser }) => {
   const { darkMode, setDarkMode } = useContext(ThemeContext);
@@ -52,6 +53,14 @@ export const ApplicationViews = ({ loggedInUser, setLoggedInUser }) => {
             element={
               <AuthorizedRoute loggedInUser={loggedInUser}>
                 <CampaignDetails loggedInUser={loggedInUser} />
+              </AuthorizedRoute>
+            }
+          />
+          <Route
+            path=":id/edit"
+            element={
+              <AuthorizedRoute loggedInUser={loggedInUser}>
+                <EditCampaign darkMode={darkMode} />
               </AuthorizedRoute>
             }
           />

@@ -156,6 +156,7 @@ public class CampaignController : ControllerBase
         }
     }
 
+    //Creates a new campaign 
     [HttpPost]
     [Authorize]
     public IActionResult NewCampaign([FromBody] CampaignDTO campaign)
@@ -188,6 +189,46 @@ public class CampaignController : ControllerBase
         {
             Console.Error.WriteLine($"Error in NewCampaign {ex}");
             return StatusCode(500, "There was an error processing your request");
+        }
+    }
+
+    //Updates an existing campaign
+    [HttpPut("{id}")]
+    [Authorize]
+    public IActionResult EditCampaign(int id, [FromBody] CampaignDTO campaignDto)
+    {
+        try
+        {
+            //Finds the campaign to edit
+            Campaign campaign = _dbContext
+            .Campaigns
+            .SingleOrDefault(c => c.Id == id);
+
+            //Checks to see if the campaign exists, and then if the incoming DTO has the required fields
+            if (campaign == null)
+            {
+                return NotFound("That campaign does not exist");
+            }
+
+            if (string.IsNullOrEmpty(campaignDto.CampaignName) || string.IsNullOrEmpty(campaignDto.CampaignDescription) || string.IsNullOrEmpty(campaignDto.LevelRange))
+            {
+                return BadRequest("Missing required fields");
+            }
+
+            campaign.CampaignName = campaignDto.CampaignName;
+            campaign.CampaignDescription = campaignDto.CampaignDescription;
+            campaign.LevelRange = campaignDto.LevelRange;
+            campaign.CampaignPicUrl = campaignDto.CampaignPicUrl;
+
+            _dbContext.SaveChanges();
+
+            return NoContent();
+
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error in EditCampaign: {ex}");
+            return StatusCode(500, "There was an error updating this campaign");
         }
     }
 }
