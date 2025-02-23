@@ -44,3 +44,21 @@ export const getCampaignById = async (id) => {
 
   return response.json();
 };
+
+//Creates a new campaign.
+//Expects an object with ownerId, campaignName, levelRange, campaignDescription, and an optional campaignPicUrl
+export const postNewCampaign = async (campaignObj) => {
+  const response = await fetch(_apiString, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(campaignObj),
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP Error! Status: ${response.status}`);
+  }
+
+  return response.json();
+};
