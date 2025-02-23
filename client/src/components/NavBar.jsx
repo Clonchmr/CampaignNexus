@@ -11,13 +11,16 @@ import {
 import { NavLink } from "react-router-dom";
 import logo from "../assets/images/CampaignNexusLogo.webp";
 import { logout } from "../managers/authManager";
-import { useContext, useEffect, useState } from "react";
-import { ThemeContext } from "../ThemeContext/ThemeContext";
+import { useEffect, useState } from "react";
 import { getCampaignsByUser } from "../managers/campaignManager";
 import "../styles/nav.css";
 
-export const NavBar = ({ loggedInUser, setLoggedInUser }) => {
-  const { darkMode, setDarkMode } = useContext(ThemeContext);
+export const NavBar = ({
+  loggedInUser,
+  setLoggedInUser,
+  darkMode,
+  setDarkMode,
+}) => {
   const [userCampaigns, setUserCampaigns] = useState([]);
 
   const themeClass = darkMode ? "dark" : "light";

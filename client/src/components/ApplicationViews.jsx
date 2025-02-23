@@ -6,8 +6,12 @@ import { Container } from "react-bootstrap";
 import { AuthorizedRoute } from "./auth/AuthorizedRoute";
 import { UserCampaigns } from "./Campaign/UserCampaigns";
 import { CampaignDetails } from "./Campaign/CampaignDetails";
+import { CreateCampaign } from "./Campaign/CreateCampaign";
+import { ThemeContext } from "../ThemeContext/ThemeContext";
+import { useContext } from "react";
 
 export const ApplicationViews = ({ loggedInUser, setLoggedInUser }) => {
+  const { darkMode, setDarkMode } = useContext(ThemeContext);
   return (
     <Routes>
       <Route
@@ -17,6 +21,8 @@ export const ApplicationViews = ({ loggedInUser, setLoggedInUser }) => {
             <NavBar
               loggedInUser={loggedInUser}
               setLoggedInUser={setLoggedInUser}
+              darkMode={darkMode}
+              setDarkMode={setDarkMode}
             />
             <Container className="pt-5">
               <Outlet />
@@ -53,7 +59,10 @@ export const ApplicationViews = ({ loggedInUser, setLoggedInUser }) => {
             path="create"
             element={
               <AuthorizedRoute loggedInUser={loggedInUser}>
-                Create Campaign
+                <CreateCampaign
+                  loggedInUser={loggedInUser}
+                  darkMode={darkMode}
+                />
               </AuthorizedRoute>
             }
           />

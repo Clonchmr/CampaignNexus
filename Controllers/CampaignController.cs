@@ -155,4 +155,39 @@ public class CampaignController : ControllerBase
             return StatusCode(500, "There was an error processing your request");
         }
     }
+
+    [HttpPost]
+    [Authorize]
+    public IActionResult NewCampaign([FromBody] CampaignDTO campaign)
+    {
+        try
+        {
+            if (campaign == null || 
+            string.IsNullOrEmpty(campaign.CampaignName) || 
+            string.IsNullOrEmpty(campaign.LevelRange) || 
+            string.IsNullOrEmpty(campaign.CampaignDescription))
+            {
+                return BadRequest("Missing required field");
+            }
+
+            Campaign newCampaign = new Campaign
+            {
+                OwnerId = campaign.OwnerId,
+                CampaignName = campaign.CampaignName,
+                CampaignDescription = campaign.CampaignDescription,
+                LevelRange = campaign.LevelRange,
+                CampaignPicUrl = campaign.CampaignPicUrl
+            };
+
+            _dbContext.Campaigns.Add(newCampaign);
+            _dbContext.SaveChanges();
+
+            return Created($"/api/campaign/{newCampaign.Id}", newCampaign);
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error in NewCampaign {ex}");
+            return StatusCode(500, "There was an error processing your request");
+        }
+    }
 }
