@@ -30,6 +30,7 @@ export default function Login({ setLoggedInUser }) {
           <Form.Label>Email</Form.Label>
           <Form.Control
             type="text"
+            className="lowerCaseFont"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />

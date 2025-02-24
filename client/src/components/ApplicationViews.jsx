@@ -52,7 +52,10 @@ export const ApplicationViews = ({ loggedInUser, setLoggedInUser }) => {
             path=":id"
             element={
               <AuthorizedRoute loggedInUser={loggedInUser}>
-                <CampaignDetails loggedInUser={loggedInUser} />
+                <CampaignDetails
+                  loggedInUser={loggedInUser}
+                  darkMode={darkMode}
+                />
               </AuthorizedRoute>
             }
           />
