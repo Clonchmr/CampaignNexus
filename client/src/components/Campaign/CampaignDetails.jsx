@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getCampaignById } from "../../managers/campaignManager";
-//import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Button,
   Card,
@@ -14,11 +14,13 @@ import {
 } from "react-bootstrap";
 import "../../styles/campaign.css";
 import { newCampaignLog } from "../../managers/campaignLogManager";
+import { RenderLogs } from "../CampaignLog/RenderLogs";
 
 export const CampaignDetails = ({ loggedInUser, darkMode }) => {
   const [campaign, setCampaign] = useState([]);
   const [newLog, setNewLog] = useState({});
   const [logModel, setLogModel] = useState(false);
+  const [logToEdit, setLogToEdit] = useState(null);
 
   const { id } = useParams();
 
@@ -26,8 +28,12 @@ export const CampaignDetails = ({ loggedInUser, darkMode }) => {
 
   const logToggle = () => setLogModel(!logModel);
 
+  const fetchCampaign = (campaignId) => {
+    getCampaignById(campaignId).then(setCampaign);
+  };
+
   useEffect(() => {
-    getCampaignById(id).then(setCampaign);
+    fetchCampaign(id);
   }, [id]);
 
   const handleNewLog = () => {
@@ -38,6 +44,7 @@ export const CampaignDetails = ({ loggedInUser, darkMode }) => {
     };
 
     newCampaignLog(campaignLogObj).then(() => {
+      fetchCampaign(id);
       logToggle();
       setNewLog({});
     });
@@ -132,36 +139,17 @@ export const CampaignDetails = ({ loggedInUser, darkMode }) => {
         <Container className="campaignDetails-description-container mt-5">
           <p>{campaign.campaignDescription}</p>
         </Container>
-        <Row
-          className="campaignDetails-logs-container mt-5"
-          style={{ width: "75%", margin: "auto" }}
-        >
-          <Col md={10}>
-            <h4 id="campaign-logs-h4">Campaign Logs</h4>
-          </Col>
-          <Col md={2}>
-            <Button className="btn-primary" onClick={logToggle}>
-              Add Log
-            </Button>
-          </Col>
-          {campaign.campaignLogs?.length > 0 ? (
-            campaign.campaignLogs?.map((log) => (
-              <Card key={log.id} className="card-background mt-4">
-                <Card.Header>{log.title}</Card.Header>
-                <Card.Body>
-                  <Card.Text>
-                    {log.body.length > 100
-                      ? `${log.body?.slice(0, 100)}...`
-                      : log.body}
-                  </Card.Text>
-                </Card.Body>
-                <Card.Footer>{log.date?.split("T")[0]}</Card.Footer>
-              </Card>
-            ))
-          ) : (
-            <p>No Logs currently recorded for this campaign</p>
-          )}
-        </Row>
+
+        <RenderLogs
+          loggedInUser={loggedInUser}
+          logToEdit={logToEdit}
+          setLogToEdit={setLogToEdit}
+          campaign={campaign}
+          darkMode={darkMode}
+          logToggle={logToggle}
+          fetchCampaign={fetchCampaign}
+        />
+
         <Row className="campaignDetails-footer mt-5">
           {loggedInUser.id === campaign.ownerId && (
             <Col>
@@ -206,6 +194,7 @@ export const CampaignDetails = ({ loggedInUser, darkMode }) => {
             <Form.Group controlId="newLog-body">
               <Form.Label>Body</Form.Label>
               <Form.Control
+                className="lowerCaseFont"
                 as="textarea"
                 required
                 placeholder="Log Body"

@@ -64,19 +64,21 @@ export const UserCampaigns = ({ loggedInUser }) => {
               </Col>
               <Col className="d-flex flex-column justify-content-around">
                 <Card.Body className="d-flex flex-column justify-content-around">
-                  <Card.Title>{c.campaignName}</Card.Title>
-                  <Card.Text>
+                  <Card.Title className="primaryText-color">
+                    {c.campaignName}
+                  </Card.Title>
+                  <Card.Text className="primaryText-color">
                     Date Started: {c.startDate?.split("T")[0]}
                   </Card.Text>
                 </Card.Body>
               </Col>
               <Col className="d-flex flex-column justify-content-around ">
-                <Card.Text>
+                <Card.Text className="primaryText-color">
                   {c.endDate
                     ? `Date Ended: ${c.endDate?.split("T")[0]}`
                     : "Active"}
                 </Card.Text>
-                <Card.Text>
+                <Card.Text className="primaryText-color">
                   {c.characters?.length === 0
                     ? "No active players"
                     : `${c.characters?.length} Players`}

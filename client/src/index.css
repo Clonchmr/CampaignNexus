@@ -94,12 +94,14 @@ button:focus-visible {
   background-color: var(--card-background);
 }
 
-.card-text {
-  color: var(--card-text);
-  font-family: "Cormorant Garamond", serif;
-  font-weight: bold;
-}
-
 .card-border {
   border-color: var(--card-border);
+}
+
+.primaryText-color {
+  color: var(--card-text);
+}
+.primaryText-color-bold {
+  color: var(--card-text);
+  font-weight: bold;
 }
