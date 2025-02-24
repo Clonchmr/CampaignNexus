@@ -1,19 +1,47 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getCampaignById } from "../../managers/campaignManager";
-import { Button, Card, Col, Container, Image, Row } from "react-bootstrap";
+//import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  Button,
+  Card,
+  Col,
+  Container,
+  Form,
+  Image,
+  Modal,
+  Row,
+} from "react-bootstrap";
 import "../../styles/campaign.css";
+import { newCampaignLog } from "../../managers/campaignLogManager";
 
-export const CampaignDetails = ({ loggedInUser }) => {
+export const CampaignDetails = ({ loggedInUser, darkMode }) => {
   const [campaign, setCampaign] = useState([]);
+  const [newLog, setNewLog] = useState({});
+  const [logModel, setLogModel] = useState(false);
 
   const { id } = useParams();
 
   const navigate = useNavigate();
 
+  const logToggle = () => setLogModel(!logModel);
+
   useEffect(() => {
     getCampaignById(id).then(setCampaign);
   }, [id]);
+
+  const handleNewLog = () => {
+    const campaignLogObj = {
+      campaignId: id,
+      title: newLog.title,
+      body: newLog.body,
+    };
+
+    newCampaignLog(campaignLogObj).then(() => {
+      logToggle();
+      setNewLog({});
+    });
+  };
   return (
     <Container>
       <Container className="campaignDetails-container mt-5">
@@ -104,20 +132,30 @@ export const CampaignDetails = ({ loggedInUser }) => {
         <Container className="campaignDetails-description-container mt-5">
           <p>{campaign.campaignDescription}</p>
         </Container>
-        <Row className="campaignDetails-logs-container mt-5">
+        <Row
+          className="campaignDetails-logs-container mt-5"
+          style={{ width: "75%", margin: "auto" }}
+        >
           <Col md={10}>
             <h4 id="campaign-logs-h4">Campaign Logs</h4>
           </Col>
           <Col md={2}>
-            <Button className="btn-primary">Add Log</Button>
+            <Button className="btn-primary" onClick={logToggle}>
+              Add Log
+            </Button>
           </Col>
           {campaign.campaignLogs?.length > 0 ? (
             campaign.campaignLogs?.map((log) => (
-              <Card key={log.id} className="card-background">
+              <Card key={log.id} className="card-background mt-4">
                 <Card.Header>{log.title}</Card.Header>
                 <Card.Body>
-                  <Card.Text>{log.body}</Card.Text>
+                  <Card.Text>
+                    {log.body.length > 100
+                      ? `${log.body?.slice(0, 100)}...`
+                      : log.body}
+                  </Card.Text>
                 </Card.Body>
+                <Card.Footer>{log.date?.split("T")[0]}</Card.Footer>
               </Card>
             ))
           ) : (
@@ -143,6 +181,50 @@ export const CampaignDetails = ({ loggedInUser }) => {
           </Col>
         </Row>
       </Container>
+      <Modal
+        show={logModel}
+        onHide={logToggle}
+        data-bs-theme={darkMode ? "dark" : "light"}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Add a Log</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group controlId="newLog-title" className="mb-4">
+              <Form.Label>Title</Form.Label>
+              <Form.Control
+                type="text"
+                required
+                name="title"
+                placeholder="Enter Title"
+                onChange={(e) => {
+                  setNewLog({ ...newLog, title: e.target.value });
+                }}
+              />
+            </Form.Group>
+            <Form.Group controlId="newLog-body">
+              <Form.Label>Body</Form.Label>
+              <Form.Control
+                as="textarea"
+                required
+                placeholder="Log Body"
+                onChange={(e) => {
+                  setNewLog({ ...newLog, body: e.target.value });
+                }}
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button className="btn-primary" onClick={handleNewLog}>
+            Add Log
+          </Button>
+          <Button className="btn-primary" onClick={logToggle}>
+            Cancel
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };

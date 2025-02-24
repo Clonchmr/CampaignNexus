@@ -27,7 +27,7 @@ body {
   margin: 0;
   font-family: "Cinzel Decorative", serif;
   color: var(--text-color);
-  text-shadow: 0 0 0.2rem var(--text-shadow);
+  text-shadow: 0 0 0.1rem var(--text-shadow);
   display: flex;
   min-width: 320px;
   min-height: 100vh;
@@ -38,6 +38,11 @@ body {
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+}
+p {
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 300;
+  font-size: 1.4rem;
 }
 
 button {
@@ -70,6 +75,10 @@ button:focus-visible {
   }
 }
 
+.lowerCaseFont {
+  font-family: "Cormorant Garamond", serif;
+}
+
 .btn-primary {
   background-color: var(--primary);
   border: 1px solid var(--primary);
@@ -87,6 +96,8 @@ button:focus-visible {
 
 .card-text {
   color: var(--card-text);
+  font-family: "Cormorant Garamond", serif;
+  font-weight: bold;
 }
 
 .card-border {

@@ -4,7 +4,7 @@
 }
 
 .campaignDetails-container {
-  /* background-color: #774e24; */
+  background-color: rgba(119, 78, 36, 0.5);
   border: 4px ridge var(--card-border);
   border-radius: 1rem;
   padding: 2rem 1rem;

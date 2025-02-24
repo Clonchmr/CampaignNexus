@@ -33,7 +33,12 @@ export const UserCampaigns = ({ loggedInUser }) => {
       >
         <Row className="d-flex">
           <Col className="d-flex justify-content-start">
-            <Button className="btn-primary">Start New</Button>
+            <Button
+              className="btn-primary"
+              onClick={() => navigate("/campaigns/create")}
+            >
+              Start New
+            </Button>
           </Col>
           <Col className="d-flex justify-content-end">
             <Button className="btn-primary" onClick={handleToggleCheck}>
