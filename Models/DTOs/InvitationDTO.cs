@@ -10,7 +10,7 @@ public class InvitationDTO
     public UserProfileDTO Sender { get; set; }
     public int RecipientId { get; set; }
     [ForeignKey("RecipientId")]
-    public UserProfile Recipient { get; set; }
+    public UserProfileDTO Recipient { get; set; }
     public int CampaignId { get; set; }
     public CampaignDTO Campaign { get; set; }
     public DateTime DateSent { get; set; }
