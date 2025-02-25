@@ -59,7 +59,8 @@ export const UserCampaigns = ({ loggedInUser }) => {
               <Col>
                 <Card.Img
                   src={c.campaignPicUrl}
-                  style={{ objectFit: "cover" }}
+                  style={{ objectFit: "cover", maxWidth: "15rem" }}
+                  id="campaignDescription-image"
                 />
               </Col>
               <Col className="d-flex flex-column justify-content-around">
