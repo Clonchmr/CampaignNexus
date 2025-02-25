@@ -75,10 +75,6 @@ button:focus-visible {
   }
 }
 
-.lowerCaseFont {
-  font-family: "Cormorant Garamond", serif;
-}
-
 .btn-primary {
   background-color: var(--primary);
   border: 1px solid var(--primary);
@@ -104,4 +100,13 @@ button:focus-visible {
 .primaryText-color-bold {
   color: var(--card-text);
   font-weight: bold;
+}
+
+.lowerCaseFont {
+  font-family: "Cormorant Garamond", serif;
+}
+
+.lowerCaseFont-bold {
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 700;
 }

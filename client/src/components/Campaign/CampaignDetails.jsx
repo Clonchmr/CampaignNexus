@@ -21,7 +21,11 @@ import "../../styles/campaign.css";
 import { newCampaignLog } from "../../managers/campaignLogManager";
 import { RenderLogs } from "../CampaignLog/RenderLogs";
 import { getAllUserProfiles } from "../../managers/userProfileManager";
-import { sendInvite } from "../../managers/invitationManager";
+import {
+  deleteInvitation,
+  getPendingCampaignInvites,
+  sendInvite,
+} from "../../managers/invitationManager";
 
 export const CampaignDetails = ({ loggedInUser, darkMode }) => {
   const [campaign, setCampaign] = useState([]);
@@ -35,6 +39,8 @@ export const CampaignDetails = ({ loggedInUser, darkMode }) => {
   const [userSearch, setUserSearch] = useState("");
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [userDropdownChoice, setUserDropdownChoice] = useState(0);
+  const [pendingInvites, setPendingInvites] = useState([]);
+  const [pendingInvitesModal, setPendingInvitesModal] = useState(false);
 
   const { id } = useParams();
 
@@ -47,6 +53,8 @@ export const CampaignDetails = ({ loggedInUser, darkMode }) => {
     setUserSearch("");
     setUserDropdownChoice(0);
   };
+  const pendingInvitesToggle = () =>
+    setPendingInvitesModal(!pendingInvitesModal);
 
   const fetchCampaign = (campaignId) => {
     getCampaignById(campaignId).then(setCampaign);
@@ -56,6 +64,10 @@ export const CampaignDetails = ({ loggedInUser, darkMode }) => {
     fetchCampaign(id);
     getAllUserProfiles().then(setUsers);
   }, [id]);
+
+  useEffect(() => {
+    getPendingCampaignInvites(id).then(setPendingInvites);
+  }, [id, pendingInvites.length]);
 
   useEffect(() => {
     if (deleteModal) {
@@ -135,9 +147,17 @@ export const CampaignDetails = ({ loggedInUser, darkMode }) => {
       campaignId: parseInt(id),
     };
 
-    sendInvite(invite).then(() => inviteToggle());
+    sendInvite(invite).then(() => {
+      getPendingCampaignInvites(id).then(setPendingInvites);
+    });
+    inviteToggle();
   };
 
+  const handleDeleteInvite = (inviteId) => {
+    deleteInvitation(inviteId).then(() => {
+      getPendingCampaignInvites(id).then(setPendingInvites);
+    });
+  };
   return (
     <Container>
       <Container className="campaignDetails-container mt-5">
@@ -177,7 +197,9 @@ export const CampaignDetails = ({ loggedInUser, darkMode }) => {
               </Button>
             </Col>
             <Col>
-              <Button className="btn-primary">See Pending Invites</Button>
+              <Button className="btn-primary" onClick={pendingInvitesToggle}>
+                See Pending Invites
+              </Button>
             </Col>
           </Row>
         )}
@@ -410,6 +432,48 @@ export const CampaignDetails = ({ loggedInUser, darkMode }) => {
             Cancel
           </Button>
         </Modal.Footer>
+      </Modal>
+      <Modal
+        show={pendingInvitesModal}
+        onHide={pendingInvitesToggle}
+        data-bs-theme={darkMode ? "dark" : "light"}
+      >
+        <Modal.Header closeButton>Pending Invites</Modal.Header>
+        <Modal.Body>
+          {pendingInvites.map((i) => (
+            <Card
+              key={i.id}
+              className="lowerCaseFont-bold mb-3"
+              style={{ boxShadow: "0 0 0.1rem white" }}
+            >
+              <Card.Body>
+                <Row className="d-flex justify-content-around">
+                  <Col
+                    md={6}
+                    className="d-flex flex-column justify-content-around"
+                  >
+                    <div className="mb-4">{`${i.recipient?.userName}`}</div>
+                    <div>{campaign.campaignName}</div>
+                  </Col>
+                  <Col
+                    md={6}
+                    className="d-flex flex-column justify-content-around"
+                  >
+                    <div className="mb-4">{i.dateSent?.split("T")[0]}</div>
+                    <div>
+                      <Button
+                        className="btn-primary"
+                        onClick={() => handleDeleteInvite(i.id)}
+                      >
+                        Cancel Invite
+                      </Button>
+                    </div>
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+          ))}
+        </Modal.Body>
       </Modal>
     </Container>
   );
