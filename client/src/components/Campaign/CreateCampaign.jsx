@@ -100,7 +100,12 @@ export const CreateCampaign = ({ loggedInUser, darkMode }) => {
           />
         </Form.Group>
         <Container className="mt-3">
-          <Image className="mb-4 mt-3" src={uploadedImage} width={200} />
+          <Image
+            className="mb-4 mt-3"
+            id="campaignDescription-image"
+            src={uploadedImage}
+            width={300}
+          />
         </Container>
         <Row className="mb-4">
           <Col>

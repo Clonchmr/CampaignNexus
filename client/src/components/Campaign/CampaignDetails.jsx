@@ -13,12 +13,15 @@ import {
   Container,
   Form,
   Image,
+  ListGroup,
   Modal,
   Row,
 } from "react-bootstrap";
 import "../../styles/campaign.css";
 import { newCampaignLog } from "../../managers/campaignLogManager";
 import { RenderLogs } from "../CampaignLog/RenderLogs";
+import { getAllUserProfiles } from "../../managers/userProfileManager";
+import { sendInvite } from "../../managers/invitationManager";
 
 export const CampaignDetails = ({ loggedInUser, darkMode }) => {
   const [campaign, setCampaign] = useState([]);
@@ -27,6 +30,11 @@ export const CampaignDetails = ({ loggedInUser, darkMode }) => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [logToEdit, setLogToEdit] = useState(null);
   const [isDisabled, setIsDisabled] = useState(true);
+  const [inviteModal, setInviteModal] = useState(false);
+  const [users, setUsers] = useState([]);
+  const [userSearch, setUserSearch] = useState("");
+  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [userDropdownChoice, setUserDropdownChoice] = useState(0);
 
   const { id } = useParams();
 
@@ -34,6 +42,11 @@ export const CampaignDetails = ({ loggedInUser, darkMode }) => {
 
   const logToggle = () => setLogModel(!logModel);
   const deleteToggle = () => setDeleteModal(!deleteModal);
+  const inviteToggle = () => {
+    setInviteModal(!inviteModal);
+    setUserSearch("");
+    setUserDropdownChoice(0);
+  };
 
   const fetchCampaign = (campaignId) => {
     getCampaignById(campaignId).then(setCampaign);
@@ -41,6 +54,7 @@ export const CampaignDetails = ({ loggedInUser, darkMode }) => {
 
   useEffect(() => {
     fetchCampaign(id);
+    getAllUserProfiles().then(setUsers);
   }, [id]);
 
   useEffect(() => {
@@ -76,6 +90,54 @@ export const CampaignDetails = ({ loggedInUser, darkMode }) => {
     deleteCampaign(id).then(() => navigate("/campaigns"));
     logToggle();
   };
+
+  const handleUserSearch = (e) => {
+    const value = e.target.value;
+    setUserSearch(value);
+
+    if (value) {
+      setFilteredUsers(
+        users.filter((user) =>
+          user.userName.toLowerCase().includes(value.toLowerCase())
+        )
+      );
+    } else {
+      setFilteredUsers([]);
+    }
+  };
+
+  const handleSelect = (user) => {
+    setUserSearch({ id: user.id, userName: user.userName });
+    setFilteredUsers([]);
+  };
+
+  const handleSendInvite = () => {
+    let recipientValue = 0;
+
+    if (
+      typeof userSearch === "object" &&
+      userSearch !== null &&
+      "id" in userSearch
+    ) {
+      recipientValue = userSearch.id;
+    } else if (userSearch !== "") {
+      const foundUser = users.find((u) => u.userName === userSearch);
+      if (foundUser) {
+        recipientValue = foundUser.id;
+      }
+    } else {
+      recipientValue = userDropdownChoice;
+    }
+
+    const invite = {
+      senderId: campaign.ownerId,
+      recipientId: recipientValue,
+      campaignId: parseInt(id),
+    };
+
+    sendInvite(invite).then(() => inviteToggle());
+  };
+
   return (
     <Container>
       <Container className="campaignDetails-container mt-5">
@@ -110,7 +172,9 @@ export const CampaignDetails = ({ loggedInUser, darkMode }) => {
         {campaign.ownerId === loggedInUser.id && (
           <Row className="campaignDetails-invite-btns mt-4">
             <Col>
-              <Button className="btn-primary">Invite New Player</Button>
+              <Button className="btn-primary" onClick={inviteToggle}>
+                Invite New Player
+              </Button>
             </Col>
             <Col>
               <Button className="btn-primary">See Pending Invites</Button>
@@ -272,6 +336,77 @@ export const CampaignDetails = ({ loggedInUser, darkMode }) => {
             Delete
           </Button>
           <Button className="btn-primary" onClick={deleteToggle}>
+            Cancel
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal
+        show={inviteModal}
+        onHide={inviteToggle}
+        data-bs-theme={darkMode ? "dark" : "light"}
+      >
+        <Modal.Header closeButton>
+          Send a new invitation to this campaign
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label htmlFor="inviteUSer-dropdown">
+                Invite by dropdown
+              </Form.Label>
+              <Form.Select
+                aria-label="inviteUser-dropdown"
+                className="lowerCaseFont"
+                disabled={userSearch !== ""}
+                onChange={(e) =>
+                  setUserDropdownChoice(parseInt(e.target.value))
+                }
+              >
+                <option value={0}>Select User</option>
+                {users.map((u) => (
+                  <option key={u.id} value={u.id}>
+                    {u.userName}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+            <Form.Group>
+              <Form.Label htmlFor="inviteUser-search">User Name</Form.Label>
+              <Form.Control
+                className="lowerCaseFont"
+                type="text"
+                disabled={userDropdownChoice !== 0}
+                placeholder="Search by user name"
+                value={userSearch?.userName}
+                onChange={(e) => handleUserSearch(e)}
+              />
+              {filteredUsers.length > 0 && (
+                <ListGroup className="lowerCaseFont">
+                  {filteredUsers.map((u) => (
+                    <ListGroup.Item
+                      key={u.id}
+                      action
+                      onClick={() => handleSelect(u)}
+                    >
+                      {u.userName}
+                    </ListGroup.Item>
+                  ))}
+                </ListGroup>
+              )}
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button className="btn-primary" onClick={handleSendInvite}>
+            Send Invite
+          </Button>
+          <Button
+            className="btn-primary"
+            onClick={() => {
+              inviteToggle();
+              setFilteredUsers([]);
+            }}
+          >
             Cancel
           </Button>
         </Modal.Footer>
