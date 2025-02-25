@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getCampaignById } from "../../managers/campaignManager";
+import {
+  completeCampaign,
+  deleteCampaign,
+  getCampaignById,
+} from "../../managers/campaignManager";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Button,
@@ -20,13 +24,16 @@ export const CampaignDetails = ({ loggedInUser, darkMode }) => {
   const [campaign, setCampaign] = useState([]);
   const [newLog, setNewLog] = useState({});
   const [logModel, setLogModel] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
   const [logToEdit, setLogToEdit] = useState(null);
+  const [isDisabled, setIsDisabled] = useState(true);
 
   const { id } = useParams();
 
   const navigate = useNavigate();
 
   const logToggle = () => setLogModel(!logModel);
+  const deleteToggle = () => setDeleteModal(!deleteModal);
 
   const fetchCampaign = (campaignId) => {
     getCampaignById(campaignId).then(setCampaign);
@@ -35,6 +42,17 @@ export const CampaignDetails = ({ loggedInUser, darkMode }) => {
   useEffect(() => {
     fetchCampaign(id);
   }, [id]);
+
+  useEffect(() => {
+    if (deleteModal) {
+      setIsDisabled(true);
+    }
+    const timer = setTimeout(() => {
+      setIsDisabled(false);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [deleteModal]);
 
   const handleNewLog = () => {
     const campaignLogObj = {
@@ -48,6 +66,15 @@ export const CampaignDetails = ({ loggedInUser, darkMode }) => {
       logToggle();
       setNewLog({});
     });
+  };
+
+  const handleCompleteCampaign = () => {
+    completeCampaign(id).then(() => fetchCampaign(id).then(() => setCampaign));
+  };
+
+  const handleDeleteCampaign = () => {
+    deleteCampaign(id).then(() => navigate("/campaigns"));
+    logToggle();
   };
   return (
     <Container>
@@ -63,7 +90,11 @@ export const CampaignDetails = ({ loggedInUser, darkMode }) => {
         )}
         <Row className="campaignDetails-header d-flex mt-3">
           <Col>
-            <Image src={campaign.campaignPicUrl} />
+            <Image
+              src={campaign.campaignPicUrl}
+              style={{ maxWidth: "20rem" }}
+              id="campaignDescription-image"
+            />
           </Col>
           <Col className="d-flex flex-column justify-content-around">
             <h3>{campaign.campaignName}</h3>
@@ -151,14 +182,22 @@ export const CampaignDetails = ({ loggedInUser, darkMode }) => {
         />
 
         <Row className="campaignDetails-footer mt-5">
-          {loggedInUser.id === campaign.ownerId && (
-            <Col>
-              <Button className="btn-primary">Complete Campaign</Button>
-            </Col>
-          )}
+          {loggedInUser.id === campaign.ownerId &&
+            campaign.endDate === null && (
+              <Col>
+                <Button
+                  className="btn-primary"
+                  onClick={handleCompleteCampaign}
+                >
+                  Complete Campaign
+                </Button>
+              </Col>
+            )}
           <Col>
             {loggedInUser.id === campaign.ownerId ? (
-              <Button className="btn-primary">Delete Campaign</Button>
+              <Button className="btn-primary" onClick={deleteToggle}>
+                Delete Campaign
+              </Button>
             ) : campaign.characters?.some(
                 (c) => c.userId === loggedInUser.id
               ) ? (
@@ -210,6 +249,29 @@ export const CampaignDetails = ({ loggedInUser, darkMode }) => {
             Add Log
           </Button>
           <Button className="btn-primary" onClick={logToggle}>
+            Cancel
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal
+        show={deleteModal}
+        onHide={deleteToggle}
+        data-bs-theme={darkMode ? "dark" : "light"}
+      >
+        <Modal.Header closeButton></Modal.Header>
+        <Modal.Body>
+          <p>Delete your campaign: {campaign.campaignName}?</p>
+          <p>This action cannot be reversed.</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            disabled={isDisabled}
+            className="btn-primary"
+            onClick={handleDeleteCampaign}
+          >
+            Delete
+          </Button>
+          <Button className="btn-primary" onClick={deleteToggle}>
             Cancel
           </Button>
         </Modal.Footer>

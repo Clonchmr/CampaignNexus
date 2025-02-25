@@ -90,6 +90,7 @@ export const CreateCampaign = ({ loggedInUser, darkMode }) => {
           <Form.Label>Description</Form.Label>
           <Form.Control
             as="textarea"
+            className="lowerCaseFont"
             rows={4}
             required
             name="campaignDescription"

@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using CampaignNexus.Data;
 using CampaignNexus.Models;
 using CampaignNexus.Models.DTOs;
@@ -49,7 +50,8 @@ public class CampaignController : ControllerBase
                 .Where(c => showActive.Value ? c.EndDate == null : c.EndDate != null);
             }
 
-            campaigns = campaigns.OrderByDescending(c => c.StartDate);
+            campaigns = campaigns.OrderByDescending(c => c.EndDate == null)
+            .ThenByDescending(c => c.StartDate);
             
             if (count.HasValue)
             {
@@ -199,6 +201,12 @@ public class CampaignController : ControllerBase
     {
         try
         {
+            //Finds the logged in user and gets their UserProfile
+            var identityUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var profile = _dbContext
+            .UserProfiles
+            .SingleOrDefault(up => up.IdentityUserId == identityUserId);
+
             //Finds the campaign to edit
             Campaign campaign = _dbContext
             .Campaigns
@@ -208,6 +216,12 @@ public class CampaignController : ControllerBase
             if (campaign == null)
             {
                 return NotFound("That campaign does not exist");
+            }
+
+            //Ensures the person trying to update this campaign is its owner
+            if (profile.Id != campaign.OwnerId)
+            {
+                return Forbid();
             }
 
             if (string.IsNullOrEmpty(campaignDto.CampaignName) || string.IsNullOrEmpty(campaignDto.CampaignDescription) || string.IsNullOrEmpty(campaignDto.LevelRange))
@@ -229,6 +243,95 @@ public class CampaignController : ControllerBase
         {
             Console.Error.WriteLine($"Error in EditCampaign: {ex}");
             return StatusCode(500, "There was an error updating this campaign");
+        }
+    }
+
+    //Sets a campaign as completed by assigning it an EndTime of DateTime.Now
+    [HttpPost("{id}/complete")]
+    [Authorize]
+    public IActionResult CompleteCampaign(int id)
+    {
+        try 
+        {
+            //Finds the logged in user and gets their UserProfile
+            var identityUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var profile = _dbContext
+            .UserProfiles
+            .SingleOrDefault(up => up.IdentityUserId == identityUserId);
+
+            Campaign campaignToComplete = _dbContext
+            .Campaigns
+            .SingleOrDefault(c => c.Id == id);
+
+            //Ensures the campaign exists
+            if (campaignToComplete == null)
+            {
+                return NotFound("That campaign does not exist");
+            }
+
+            //Checks to see if the campaign hasn't been completed yet
+            if (campaignToComplete.EndDate != null)
+            {
+                return BadRequest("That campaign has already been completed");
+            }
+
+            //Ensures the person trying to complete the campaign is the owner
+            if (profile.Id != campaignToComplete.OwnerId)
+            {
+                return Forbid();
+            }
+
+            campaignToComplete.EndDate = DateTime.Now;
+
+            _dbContext.SaveChanges();
+
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error in CompleteCampaign {ex}");
+            return StatusCode(500, "An error occurred while trying to mark this campaign as completed.");
+        }
+    }
+
+    [HttpDelete("{id}")]
+    [Authorize]
+    public IActionResult DeleteCampaign(int id)
+    {
+        try
+        {
+            //Finds the logged in user and gets their UserProfile
+            var identityUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var profile = _dbContext
+            .UserProfiles
+            .SingleOrDefault(up => up.IdentityUserId == identityUserId);
+
+            //Finds the campaign to be deleted
+            Campaign campaignToDelete = _dbContext
+            .Campaigns
+            .SingleOrDefault(c => c.Id == id);
+
+            //Ensures the campaign trying to be deleted exists
+            if (campaignToDelete == null)
+            {
+                return NotFound("That campaign does not exist");
+            }
+
+            //Ensures the user trying to access this endpoint is the owner of the campaign
+            if (campaignToDelete.OwnerId != profile.Id)
+            {
+                return Forbid();
+            }
+
+            _dbContext.Campaigns.Remove(campaignToDelete);
+            _dbContext.SaveChanges();
+
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error in DeleteCampaign {ex}");
+            return StatusCode(500, "An error occurred while deleting that campaign");
         }
     }
 }

@@ -78,3 +78,31 @@ export const editCampaign = async (campaignObj) => {
     throw new Error(`HTTP Error! Status: ${response.status}`);
   }
 };
+
+//Marks a campaign as completed by assigning it an EndTime of the current time
+export const completeCampaign = async (id) => {
+  const response = await fetch(`${_apiString}/${id}/complete`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP Error! Status: ${response.status}`);
+  }
+};
+
+//Deletes a campaign by its id
+export const deleteCampaign = async (id) => {
+  const response = await fetch(`${_apiString}/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP Error! Status: ${response.status}`);
+  }
+};
