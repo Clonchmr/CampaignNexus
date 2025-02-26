@@ -49,7 +49,14 @@ public class CharacterDTO
     public double TotalWeight {
         get 
         {
+            if (CharacterItems != null)
+            {
             return CharacterItems.Sum(i => i.Item.Weight * i.Quantity);
+            } 
+            else
+            {
+                return 0;
+            }
         }
     }
 }

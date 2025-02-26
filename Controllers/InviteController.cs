@@ -19,43 +19,88 @@ public class InviteController : ControllerBase
         _dbContext = context;
     }
 
-    //Gets invitations to a campaign that are pending
-    [HttpGet("campaign/{id}")]
+    //Gets pending invitations to a campaign, or to a user
+    [HttpGet("pending")]
     [Authorize]
-    public IActionResult GetPending(int id) 
+    public IActionResult GetPending([FromQuery] int? campaignId, [FromQuery] int? recipientId) 
     {
         try
         {
-            Campaign campaign = _dbContext
-            .Campaigns
-            .SingleOrDefault(c => c.Id == id);
-
-            if (campaign == null)
-            {
-                return NotFound(new{message = "That campaign does not exist"});
-            }
-
-            return Ok(_dbContext
+            IQueryable<Invitation> query = _dbContext
             .Invitations
             .Include(i => i.Recipient)
                 .ThenInclude(r => r.IdentityUser)
-            .Where(i => i.CampaignId == id)
-            .Where(i => i.Status == "Pending")
+            .Include(i => i.Sender)
+                .ThenInclude(s => s.IdentityUser)
+            .Include(i => i.Campaign)
+            .Where(i => i.Status == "Pending");
+
+            //Checks to see if campaignId has a value, and if so makes sure that campaign exists, and then adds to the query
+             if (campaignId.HasValue)
+            {
+                Campaign campaign = _dbContext
+                .Campaigns
+                .SingleOrDefault(c => c.Id == campaignId);
+                
+                if (campaign == null)
+                {
+                    return NotFound(new{message = "That campaign does not exist"});
+                }
+                else
+                {
+                    query = query.Where(i => i.CampaignId == campaignId.Value);
+                }
+            }
+
+            //Checks to see if recipientId has a value, and if so makes sure that recipient exists, and then adds to the query
+            if (recipientId.HasValue)
+            {
+                UserProfile recipient = _dbContext
+                .UserProfiles
+                .SingleOrDefault(up => up.Id == recipientId.Value);
+
+                if (recipient == null)
+                {
+                    return NotFound(new{message = "That recipient does not exist"});
+                }
+                else
+                {
+                    query = query.Where(i => i.RecipientId == recipientId.Value);
+                } 
+            }
+
+            return Ok(query
             .OrderByDescending(i => i.DateSent)
             .Select(i => new InvitationDTO
             {
                 Id = i.Id,
                 SenderId = i.SenderId,
+                Sender = recipientId.HasValue ? new UserProfileDTO
+                {
+                    Id = i.Sender.Id,
+                    FirstName = i.Sender.FirstName,
+                    LastName = i.Sender.LastName,
+                    Email = i.Sender.IdentityUser.Email,
+                    UserName = i.Sender.IdentityUser.UserName
+                } : null,
                 RecipientId = i.RecipientId,
-                Recipient = new UserProfileDTO
+                Recipient = campaignId.HasValue ? new UserProfileDTO
                 {
                     Id = i.RecipientId,
                     FirstName = i.Recipient.FirstName,
                     LastName = i.Recipient.LastName,
                     Email = i.Recipient.IdentityUser.Email,
                     UserName = i.Recipient.IdentityUser.UserName       
-                },
+                } : null,
                 CampaignId = i.CampaignId,
+                Campaign = recipientId.HasValue ? new CampaignDTO
+                {
+                    Id = i.Campaign.Id,
+                    CampaignName = i.Campaign.CampaignName,
+                    LevelRange = i.Campaign.LevelRange,
+                    CampaignDescription = i.Campaign.CampaignDescription,
+                    CampaignPicUrl = i.Campaign.CampaignPicUrl
+                } : null,
                 DateSent = i.DateSent,
                 Status = i.Status
             }));
@@ -165,6 +210,62 @@ public class InviteController : ControllerBase
         {
             Console.Error.Write($"Error in delete invite {ex}");
             return StatusCode(500, "An error occurred deleting that invitation");
+        }
+    }
+
+    //Creates a new CharacterCampaign entity linking a character to a campaign
+    [HttpPost("accept")]
+    [Authorize]
+    public IActionResult AcceptInvite([FromBody] CharacterCampaignDTO characterCampaign)
+    {
+        try
+        {
+            //Checks to see if the character exists
+            Character character = _dbContext
+            .Characters
+            .Include(c => c.UserProfile)
+            .SingleOrDefault(c => c.Id == characterCampaign.CharacterId);
+
+            if (character == null)
+            {
+                return NotFound("That character does not exist");
+            }
+            //Checks to see if that campaign exists
+            Campaign campaign = _dbContext
+            .Campaigns
+            .Include(c => c.Owner)
+            .SingleOrDefault(c => c.Id == characterCampaign.CampaignId);
+
+            if (campaign == null)
+            {
+                return NotFound("That campaign does not exist");
+            }
+
+            //Creates the new CharacterCampaign entity
+            CharacterCampaign newCharacterCampaign = new CharacterCampaign
+            {
+                CharacterId = characterCampaign.CharacterId,
+                CampaignId = characterCampaign.CampaignId
+            };
+
+            _dbContext.CharacterCampaigns.Add(newCharacterCampaign);
+
+            //Finds the invitation thats being accepted and changes its Status to Accepted
+            Invitation invite = _dbContext
+            .Invitations
+            .SingleOrDefault(i => i.RecipientId == character.UserProfile.Id && i.CampaignId == campaign.Id);
+
+            invite.Status = "Accepted";
+
+
+            _dbContext.SaveChanges();
+            
+            return Created($"api/charactercampaign/{newCharacterCampaign.Id}", newCharacterCampaign);
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error occurred in AcceptInvite {ex}");
+            return StatusCode(500, "An error occurred accepting the invite");
         }
     }
 }
