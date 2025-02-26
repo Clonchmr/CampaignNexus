@@ -1,4 +1,5 @@
 import {
+  Badge,
   Button,
   Container,
   Form,
@@ -7,6 +8,8 @@ import {
   Navbar,
   NavDropdown,
   Offcanvas,
+  OverlayTrigger,
+  Tooltip,
 } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import logo from "../assets/images/CampaignNexusLogo.webp";
@@ -14,6 +17,9 @@ import { logout } from "../managers/authManager";
 import { useEffect, useState } from "react";
 import { getCampaignsByUser } from "../managers/campaignManager";
 import "../styles/nav.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { getPendingInvites } from "../managers/invitationManager";
+import { PendingInvitesModal } from "./Modals/Navbar/PendingInvitesModal";
 
 export const NavBar = ({
   loggedInUser,
@@ -22,11 +28,25 @@ export const NavBar = ({
   setDarkMode,
 }) => {
   const [userCampaigns, setUserCampaigns] = useState([]);
+  const [userPendingInvites, setUserPendingInvites] = useState([]);
+  const [pendingInvitesModal, setPendingInvitesModal] = useState(false);
+  const [inviteDetailsModal, setInviteDetailsModal] = useState(false);
 
   const themeClass = darkMode ? "dark" : "light";
 
+  const pendingInvitesToggle = () =>
+    setPendingInvitesModal(!pendingInvitesModal);
+  const inviteDetailsToggle = () => setInviteDetailsModal(!inviteDetailsModal);
+
+  const renderInviteTooltip = (props) => (
+    <Tooltip id="invite-tooltip" {...props}>
+      Pending Invitations
+    </Tooltip>
+  );
+
   useEffect(() => {
     getCampaignsByUser(loggedInUser.id, 3, true).then(setUserCampaigns);
+    getPendingInvites(loggedInUser.id, null).then(setUserPendingInvites);
   }, [loggedInUser.id]);
   return (
     <Navbar
@@ -66,6 +86,31 @@ export const NavBar = ({
                 ))}
               </NavDropdown>
               <Nav.Link href="/campaigns/create">Create Campaign</Nav.Link>
+              <Nav.Link as="span">
+                <OverlayTrigger
+                  placement="right"
+                  delay={{ show: 250, hide: 500 }}
+                  overlay={renderInviteTooltip}
+                >
+                  <Button
+                    variant={darkMode ? "dark" : "light"}
+                    onClick={pendingInvitesToggle}
+                  >
+                    <FontAwesomeIcon icon="fa-solid fa-bell" />
+                    {userPendingInvites.length > 0 && (
+                      <Badge
+                        bg="#6e0d25"
+                        style={{
+                          color: darkMode ? "white" : "black",
+                          fontFamily: "serif",
+                        }}
+                      >
+                        {userPendingInvites.length}
+                      </Badge>
+                    )}
+                  </Button>
+                </OverlayTrigger>
+              </Nav.Link>
             </Nav>
             <Nav className="me-auto">
               <Form>
@@ -93,6 +138,16 @@ export const NavBar = ({
           </Offcanvas.Body>
         </Navbar.Offcanvas>
       </Container>
+      <PendingInvitesModal
+        pendingInvitesModal={pendingInvitesModal}
+        pendingInvitesToggle={pendingInvitesToggle}
+        userPendingInvites={userPendingInvites}
+        setUserPendingInvites={setUserPendingInvites}
+        darkMode={darkMode}
+        inviteDetailsModal={inviteDetailsModal}
+        inviteDetailsToggle={inviteDetailsToggle}
+        loggedInUser={loggedInUser}
+      />
     </Navbar>
   );
 };

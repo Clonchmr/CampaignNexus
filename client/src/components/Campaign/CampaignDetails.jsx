@@ -23,9 +23,10 @@ import { RenderLogs } from "../CampaignLog/RenderLogs";
 import { getAllUserProfiles } from "../../managers/userProfileManager";
 import {
   deleteInvitation,
-  getPendingCampaignInvites,
+  getPendingInvites,
   sendInvite,
 } from "../../managers/invitationManager";
+import { getCharacters } from "../../managers/characterManager";
 
 export const CampaignDetails = ({ loggedInUser, darkMode }) => {
   const [campaign, setCampaign] = useState([]);
@@ -41,6 +42,7 @@ export const CampaignDetails = ({ loggedInUser, darkMode }) => {
   const [userDropdownChoice, setUserDropdownChoice] = useState(0);
   const [pendingInvites, setPendingInvites] = useState([]);
   const [pendingInvitesModal, setPendingInvitesModal] = useState(false);
+  const [campaignCharacters, setCampaignCharacters] = useState([]);
 
   const { id } = useParams();
 
@@ -63,10 +65,11 @@ export const CampaignDetails = ({ loggedInUser, darkMode }) => {
   useEffect(() => {
     fetchCampaign(id);
     getAllUserProfiles().then(setUsers);
-  }, [id]);
+    getCharacters(null, id).then(setCampaignCharacters);
+  }, [id, campaignCharacters.length]);
 
   useEffect(() => {
-    getPendingCampaignInvites(id).then(setPendingInvites);
+    getPendingInvites(null, id).then(setPendingInvites);
   }, [id, pendingInvites.length]);
 
   useEffect(() => {
@@ -148,14 +151,14 @@ export const CampaignDetails = ({ loggedInUser, darkMode }) => {
     };
 
     sendInvite(invite).then(() => {
-      getPendingCampaignInvites(id).then(setPendingInvites);
+      getPendingInvites(null, id).then(setPendingInvites);
     });
     inviteToggle();
   };
 
   const handleDeleteInvite = (inviteId) => {
     deleteInvitation(inviteId).then(() => {
-      getPendingCampaignInvites(id).then(setPendingInvites);
+      getPendingInvites(null, id).then(setPendingInvites);
     });
   };
   return (
@@ -203,23 +206,31 @@ export const CampaignDetails = ({ loggedInUser, darkMode }) => {
             </Col>
           </Row>
         )}
-        {campaign.characters != null && (
-          <Row className="campaignPlayers-container">
+        {campaignCharacters != null && (
+          <Row className="campaignPlayers-container mt-5">
             <Col>
-              {campaign.characters.map((character, index) =>
+              {campaignCharacters.map((character, index) =>
                 index % 2 === 0 ? (
-                  <Card key={character.id}>
+                  <Card
+                    key={character.id}
+                    className="campaignDetails-container"
+                  >
                     <Row>
                       <Col>
-                        <Card.Img src={character.characterPicUrl} />
+                        <Card.Img
+                          src={character.characterPicUrl}
+                          style={{ maxWidth: "9rem" }}
+                        />
                       </Col>
-                      <Col>
+                      <Col className="d-flex align-items-center">
                         <Card.Body>
-                          <Card.Title>{character.name}</Card.Title>
+                          <Card.Title className="primaryText-color">
+                            {character.name}
+                          </Card.Title>
                         </Card.Body>
                       </Col>
                       {loggedInUser.id === campaign.ownerId && (
-                        <Col>
+                        <Col className="d-flex align-items-center">
                           <Button className="btn-primary">Remove</Button>
                         </Col>
                       )}
@@ -229,20 +240,28 @@ export const CampaignDetails = ({ loggedInUser, darkMode }) => {
               )}
             </Col>
             <Col>
-              {campaign.characters.map((character, index) =>
+              {campaignCharacters.map((character, index) =>
                 index % 2 !== 0 ? (
-                  <Card key={character.id}>
+                  <Card
+                    key={character.id}
+                    className="campaignDetails-container"
+                  >
                     <Row>
                       <Col>
-                        <Card.Img src={character.characterPicUrl} />
+                        <Card.Img
+                          src={character.characterPicUrl}
+                          style={{ maxWidth: "9rem" }}
+                        />
                       </Col>
-                      <Col>
+                      <Col className="d-flex align-items-center">
                         <Card.Body>
-                          <Card.Title>{character.name}</Card.Title>
+                          <Card.Title className="primaryText-color">
+                            {character.name}
+                          </Card.Title>
                         </Card.Body>
                       </Col>
                       {loggedInUser.id === campaign.ownerId && (
-                        <Col>
+                        <Col className="d-flex align-items-center">
                           <Button className="btn-primary">Remove</Button>
                         </Col>
                       )}

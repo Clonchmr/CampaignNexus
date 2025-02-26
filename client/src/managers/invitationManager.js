@@ -1,9 +1,27 @@
 const _apiString = "/api/invite";
 
-//Gets all pending invitations to a campaign
-//Expects the id of a campaign
-export const getPendingCampaignInvites = async (id) => {
-  const response = await fetch(`${_apiString}/campaign/${id}`);
+//Gets all pending invitations to a campaign or to a user
+//Include a recipientId if you want pending invites to a user
+//Include a campaignId if you want pending invites to a campaign
+export const getPendingInvites = async (
+  recipientId = null,
+  campaignId = null
+) => {
+  const params = new URLSearchParams();
+
+  if (recipientId !== null) {
+    params.append("recipientId", recipientId);
+  }
+
+  if (campaignId !== null) {
+    params.append("campaignId", campaignId);
+  }
+
+  const url = params.toString()
+    ? `${_apiString}/pending?${params.toString()}`
+    : `${_apiString}/pending`;
+
+  const response = await fetch(url);
 
   if (response === 404) {
     return response.text();
@@ -54,4 +72,26 @@ export const deleteInvitation = async (id) => {
   if (!response.ok) {
     throw new Error(`HTTP Error! Status: ${response.status}`);
   }
+};
+
+//Accepts an invite to a campaign by creating a new characterCampaign entity
+//Expects an object with campaignId and characterId
+export const acceptInvite = async (characterCampaignObj) => {
+  const response = await fetch(`${_apiString}/accept`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(characterCampaignObj),
+  });
+
+  if (response === 404) {
+    return response.text();
+  }
+
+  if (!response.ok) {
+    throw new Error(`HTTP Error! Status: ${response.status}`);
+  }
+
+  return response.json();
 };
