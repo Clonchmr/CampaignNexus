@@ -13,9 +13,9 @@ export const login = (email, password) => {
 export const logout = () => fetch(_apiUrl + "/logout");
 
 export const tryGetLoggedInUser = () => {
-  return fetch(_apiUrl + "/me").then((res) =>
-    res.status === 401 ? null : res.json()
-  );
+  return fetch(_apiUrl + "/me").then((res) => {
+    return res.status === 401 ? null : res.json();
+  });
 };
 
 export const register = (userProfile) => {

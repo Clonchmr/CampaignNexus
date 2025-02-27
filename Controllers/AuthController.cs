@@ -96,8 +96,8 @@ public class AuthController : ControllerBase
         }
     }
 
-    [HttpGet("Me")]
-    //[Authorize]
+    [HttpGet("me")]
+    [Authorize]
     public IActionResult Me()
     {
         var identityUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);

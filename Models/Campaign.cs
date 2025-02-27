@@ -19,6 +19,6 @@ public class Campaign
     public DateTime? EndDate { get; set; } = null;
     public string CampaignPicUrl { get; set; }
     public ICollection<CharacterCampaign> CharacterCampaigns { get; set; }
-    public ICollection<Character> Characters { get; set; }
+   
     public ICollection<CampaignLog> CampaignLogs { get; set; }
 }

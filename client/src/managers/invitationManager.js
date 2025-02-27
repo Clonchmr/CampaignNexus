@@ -95,3 +95,22 @@ export const acceptInvite = async (characterCampaignObj) => {
 
   return response.json();
 };
+
+//Declines an invitation to a campaign
+//Expects an invitationId
+export const declineInvite = async (inviteId) => {
+  const response = await fetch(`${_apiString}/decline/${inviteId}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (response === 404) {
+    return response.text();
+  }
+
+  if (!response.ok) {
+    throw new Error(`HTTP Error! Status: ${response.status}`);
+  }
+};

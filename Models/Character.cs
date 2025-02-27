@@ -82,5 +82,5 @@ public class Character
     public ICollection<CharacterAbility> CharacterAbilities { get; set; }
     public ICollection<Ability> Abilities { get; set; }
     public ICollection<CharacterCampaign> CharacterCampaigns { get; set; }
-    public ICollection<Campaign> Campaigns { get; set; }
+   
 }

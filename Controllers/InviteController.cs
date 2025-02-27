@@ -253,7 +253,7 @@ public class InviteController : ControllerBase
             //Finds the invitation thats being accepted and changes its Status to Accepted
             Invitation invite = _dbContext
             .Invitations
-            .SingleOrDefault(i => i.RecipientId == character.UserProfile.Id && i.CampaignId == campaign.Id);
+            .SingleOrDefault(i => i.RecipientId == character.UserProfile.Id && i.CampaignId == campaign.Id && i.Status == "Pending");
 
             invite.Status = "Accepted";
 
@@ -266,6 +266,36 @@ public class InviteController : ControllerBase
         {
             Console.Error.WriteLine($"Error occurred in AcceptInvite {ex}");
             return StatusCode(500, "An error occurred accepting the invite");
+        }
+    }
+
+    [HttpPost("decline/{id}")]
+    [Authorize]
+    public IActionResult DeclineInvite(int id)
+    {
+        try
+        {
+            //Find the invite to be declined
+            Invitation invite = _dbContext
+            .Invitations
+            .SingleOrDefault(i => i.Id == id);
+
+            if (invite == null)
+            {
+                return NotFound("That invitation does not exist");
+            }
+
+            invite.Status = "Declined";
+
+            _dbContext.SaveChanges();
+
+            return NoContent();
+            
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error occurred in DeclineInvite. {ex}");
+            return StatusCode(500, "An error occurred trying to decline this invitation");
         }
     }
 }

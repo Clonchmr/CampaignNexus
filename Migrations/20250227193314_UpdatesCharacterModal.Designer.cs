@@ -3,6 +3,7 @@ using System;
 using CampaignNexus.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CampaignNexus.Migrations
 {
     [DbContext(typeof(CampaignNexusDbContext))]
-    partial class CampaignNexusDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250227193314_UpdatesCharacterModal")]
+    partial class UpdatesCharacterModal
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

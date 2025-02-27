@@ -117,7 +117,10 @@ export const RenderLogs = ({
             </Card.Body>
             <Card.Footer>
               <Row>
-                {campaign.ownerId === loggedInUser.id && (
+                {(campaign.ownerId === loggedInUser.id ||
+                  campaign.characters.some(
+                    (c) => c.userId === loggedInUser.id
+                  )) && (
                   <>
                     <Col xs="auto">
                       <Button
