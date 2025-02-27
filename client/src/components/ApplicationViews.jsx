@@ -10,6 +10,7 @@ import { CreateCampaign } from "./Campaign/CreateCampaign";
 import { ThemeContext } from "../ThemeContext/ThemeContext";
 import { useContext } from "react";
 import { EditCampaign } from "./Campaign/EditCampaign";
+import { Welcome } from "./Welcome";
 
 export const ApplicationViews = ({ loggedInUser, setLoggedInUser }) => {
   const { darkMode, setDarkMode } = useContext(ThemeContext);
@@ -35,7 +36,7 @@ export const ApplicationViews = ({ loggedInUser, setLoggedInUser }) => {
           index
           element={
             <AuthorizedRoute loggedInUser={loggedInUser}>
-              <>Welcome</>
+              <Welcome loggedInUser={loggedInUser} />
             </AuthorizedRoute>
           }
         />

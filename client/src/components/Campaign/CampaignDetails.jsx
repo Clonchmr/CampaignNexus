@@ -185,7 +185,7 @@ export const CampaignDetails = ({ loggedInUser, darkMode }) => {
             <Image
               src={campaign.campaignPicUrl}
               style={{ maxWidth: "20rem" }}
-              id="campaignDescription-image"
+              className="campaignDescription-image"
             />
           </Col>
           <Col className="d-flex flex-column justify-content-around">
