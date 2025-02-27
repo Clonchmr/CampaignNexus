@@ -14,8 +14,8 @@ export const InviteDetailsModal = ({
   pendingInvitesToggle,
   detailsModalTarget,
   loggedInUser,
-  pendingUserInvites,
-  setPendingUserInvites,
+  setUserPendingInvites,
+  handleDeclineInvite,
 }) => {
   const [chosenCharacter, setChosenCharacter] = useState(null);
   const [userCharacters, setUserCharacters] = useState([]);
@@ -28,20 +28,21 @@ export const InviteDetailsModal = ({
 
   const target = detailsModalTarget.campaign;
 
-  const handleAcceptInvite = () => {
+  const handleAcceptInvite = async () => {
     const characterCampaignObj = {
       campaignId: target?.id,
       characterId: parseInt(chosenCharacter),
     };
 
-    acceptInvite(characterCampaignObj).then(() => {
-      inviteDetailsToggle();
-      pendingInvitesToggle();
-      getPendingInvites(loggedInUser.id, null).then(
-        () => setPendingUserInvites
-      );
-      navigate(`/campaigns/${target.id}`);
-    });
+    await acceptInvite(characterCampaignObj);
+
+    const updatedInvites = await getPendingInvites(loggedInUser.id);
+
+    setUserPendingInvites(updatedInvites);
+
+    inviteDetailsToggle();
+    pendingInvitesToggle();
+    navigate(`/campaigns/${target.id}`);
   };
 
   return (
@@ -98,7 +99,12 @@ export const InviteDetailsModal = ({
         >
           Accept Invitation
         </Button>
-        <Button className="btn-primary">Decline Invitation</Button>
+        <Button
+          className="btn-primary"
+          onClick={() => handleDeclineInvite(detailsModalTarget.id)}
+        >
+          Decline Invitation
+        </Button>
       </Modal.Footer>
     </Modal>
   );

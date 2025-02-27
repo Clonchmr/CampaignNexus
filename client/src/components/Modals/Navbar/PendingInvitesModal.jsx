@@ -1,18 +1,32 @@
 import { Button, Card, Col, Modal, Row } from "react-bootstrap";
 import { InviteDetailsModal } from "./InviteDetailsModal";
 import { useState } from "react";
+import {
+  declineInvite,
+  getPendingInvites,
+} from "../../../managers/invitationManager";
 
 export const PendingInvitesModal = ({
   pendingInvitesModal,
   pendingInvitesToggle,
   userPendingInvites,
-  setPendingUserInvites,
+  setUserPendingInvites,
   darkMode,
   inviteDetailsModal,
   inviteDetailsToggle,
   loggedInUser,
 }) => {
   const [detailsModalTarget, setDetailsModalTarget] = useState({});
+
+  const handleDeclineInvite = async (inviteId) => {
+    await declineInvite(inviteId);
+    const updatedInvites = await getPendingInvites(loggedInUser.id, null);
+    setUserPendingInvites(updatedInvites);
+
+    if (inviteDetailsModal) {
+      inviteDetailsToggle();
+    }
+  };
 
   return (
     <Modal
@@ -25,7 +39,7 @@ export const PendingInvitesModal = ({
       <Modal.Body>
         {userPendingInvites.length > 0 ? (
           userPendingInvites.map((i) => (
-            <Card key={i.id}>
+            <Card key={i.id} className="mb-4">
               <Card.Body>
                 <Row className="d-flex">
                   <Col
@@ -61,6 +75,7 @@ export const PendingInvitesModal = ({
                     <Button
                       className="btn-primary"
                       style={{ fontSize: "0.7rem" }}
+                      onClick={() => handleDeclineInvite(i.id)}
                     >
                       Decline
                     </Button>
@@ -81,7 +96,8 @@ export const PendingInvitesModal = ({
         detailsModalTarget={detailsModalTarget}
         loggedInUser={loggedInUser}
         userPendingInvites={userPendingInvites}
-        setUserPendingInvites={setPendingUserInvites}
+        setUserPendingInvites={setUserPendingInvites}
+        handleDeclineInvite={handleDeclineInvite}
       />
     </Modal>
   );

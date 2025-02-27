@@ -41,8 +41,9 @@ public class CampaignController : ControllerBase
 
             IEnumerable<Campaign> campaigns = _dbContext
             .Campaigns
-            .Include(c => c.Characters)
-            .Where(c => c.OwnerId == userId);
+            .Include(c => c.CharacterCampaigns)
+                .ThenInclude(cc => cc.Character)
+            .Where(c => c.OwnerId == userId || c.CharacterCampaigns.Any(cc => cc.Character.UserId == userId));
             
             if (showActive.HasValue)
             {
@@ -70,10 +71,11 @@ public class CampaignController : ControllerBase
                 StartDate = c.StartDate,
                 EndDate = c.EndDate != null ? c.EndDate : null,
                 CampaignPicUrl = c.CampaignPicUrl,
-                Characters = c.Characters.Select(character => new CharacterDTO
+                Characters = c.CharacterCampaigns!= null ? c.CharacterCampaigns.Select(cc => new CharacterDTO
                 {
-                    Id = character.Id
-                }).ToList()
+                    Id = cc.Character.Id,
+                    UserId = cc.Character.UserId
+                }).ToList() : null
             }));
         }
         catch (Exception ex)
@@ -126,19 +128,19 @@ public class CampaignController : ControllerBase
                 StartDate = campaign.StartDate,
                 EndDate = campaign.EndDate != null ? campaign.EndDate : null,
                 CampaignPicUrl = campaign.CampaignPicUrl,
-                Characters = campaign.Characters != null ? campaign.Characters.Select(character => new CharacterDTO
+                Characters = campaign.CharacterCampaigns != null ? campaign.CharacterCampaigns.Select(cc => new CharacterDTO
                 {
-                    Id = character.Id,
-                    UserId = character.UserId,
+                    Id = cc.Character.Id,
+                    UserId = cc.Character.UserId,
                     UserProfile = new UserProfileDTO
                     {
-                        Id = character.UserProfile.Id,
-                        FirstName = character.UserProfile.FirstName,
-                        LastName = character.UserProfile.LastName,
-                        Email = character.UserProfile.IdentityUser.Email,
-                        UserName = character.UserProfile.IdentityUser.Email
+                        Id = cc.Character.UserProfile.Id,
+                        FirstName = cc.Character.UserProfile.FirstName,
+                        LastName = cc.Character.UserProfile.LastName,
+                        Email = cc.Character.UserProfile.IdentityUser.Email,
+                        UserName = cc.Character.UserProfile.IdentityUser.Email
                     },
-                    Name = character.Name
+                    Name = cc.Character.Name
                 }).ToList() : null,
                 CampaignLogs = campaign.CampaignLogs != null ? campaign.CampaignLogs.Select(l => new CampaignLogDTO
                 {

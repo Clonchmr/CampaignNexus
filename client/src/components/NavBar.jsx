@@ -45,9 +45,16 @@ export const NavBar = ({
   );
 
   useEffect(() => {
-    getCampaignsByUser(loggedInUser.id, 3, true).then(setUserCampaigns);
-    getPendingInvites(loggedInUser.id, null).then(setUserPendingInvites);
-  }, [loggedInUser.id]);
+    if (loggedInUser && loggedInUser.id) {
+      getCampaignsByUser(loggedInUser.id, 3, true).then(setUserCampaigns);
+    }
+  }, [loggedInUser]);
+
+  useEffect(() => {
+    if (loggedInUser && loggedInUser.id) {
+      getPendingInvites(loggedInUser.id, null).then(setUserPendingInvites);
+    }
+  }, [loggedInUser, userPendingInvites.length]);
   return (
     <Navbar
       expand="lg"
@@ -74,44 +81,51 @@ export const NavBar = ({
           </Offcanvas.Header>
           <Offcanvas.Body>
             <Nav className="me-auto flex-grow-1 pe-3">
-              <NavDropdown title="Campaigns" id="campaignsDropdown">
-                <NavDropdown.Item href="/campaigns">View All</NavDropdown.Item>
-                {userCampaigns.map((c) => (
-                  <NavDropdown.Item
-                    key={`Campaign-${c.id}`}
-                    href={`/campaigns/${c.id}`}
-                  >
-                    {c.campaignName}
-                  </NavDropdown.Item>
-                ))}
-              </NavDropdown>
-              <Nav.Link href="/campaigns/create">Create Campaign</Nav.Link>
-              <Nav.Link as="span">
-                <OverlayTrigger
-                  placement="right"
-                  delay={{ show: 250, hide: 500 }}
-                  overlay={renderInviteTooltip}
-                >
-                  <Button
-                    variant={darkMode ? "dark" : "light"}
-                    onClick={pendingInvitesToggle}
-                  >
-                    <FontAwesomeIcon icon="fa-solid fa-bell" />
-                    {userPendingInvites.length > 0 && (
-                      <Badge
-                        bg="#6e0d25"
-                        style={{
-                          color: darkMode ? "white" : "black",
-                          fontFamily: "serif",
-                        }}
+              {loggedInUser && (
+                <>
+                  <NavDropdown title="Campaigns" id="campaignsDropdown">
+                    <NavDropdown.Item href="/campaigns">
+                      View All
+                    </NavDropdown.Item>
+                    {userCampaigns.map((c) => (
+                      <NavDropdown.Item
+                        key={`Campaign-${c.id}`}
+                        href={`/campaigns/${c.id}`}
                       >
-                        {userPendingInvites.length}
-                      </Badge>
-                    )}
-                  </Button>
-                </OverlayTrigger>
-              </Nav.Link>
+                        {c.campaignName}
+                      </NavDropdown.Item>
+                    ))}
+                  </NavDropdown>
+                  <Nav.Link href="/campaigns/create">Create Campaign</Nav.Link>
+                  <Nav.Link as="span">
+                    <OverlayTrigger
+                      placement="right"
+                      delay={{ show: 250, hide: 500 }}
+                      overlay={renderInviteTooltip}
+                    >
+                      <Button
+                        variant={darkMode ? "dark" : "light"}
+                        onClick={pendingInvitesToggle}
+                      >
+                        <FontAwesomeIcon icon="fa-solid fa-bell" />
+                        {userPendingInvites.length > 0 && (
+                          <Badge
+                            bg="#6e0d25"
+                            style={{
+                              color: darkMode ? "white" : "black",
+                              fontFamily: "serif",
+                            }}
+                          >
+                            {userPendingInvites.length}
+                          </Badge>
+                        )}
+                      </Button>
+                    </OverlayTrigger>
+                  </Nav.Link>
+                </>
+              )}
             </Nav>
+
             <Nav className="me-auto">
               <Form>
                 <Form.Check
@@ -122,17 +136,13 @@ export const NavBar = ({
                   label={darkMode ? "🌙" : "🔆"}
                 />
               </Form>
-              {loggedInUser ? (
+              {loggedInUser && (
                 <Button
                   className="btn-primary"
                   onClick={() => logout().then(() => setLoggedInUser(null))}
                 >
                   Log Out
                 </Button>
-              ) : (
-                <Nav.Link as={NavLink} href="/login">
-                  <Button variant="outline-primary">Login</Button>
-                </Nav.Link>
               )}
             </Nav>
           </Offcanvas.Body>

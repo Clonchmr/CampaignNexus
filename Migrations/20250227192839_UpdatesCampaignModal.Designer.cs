@@ -3,6 +3,7 @@ using System;
 using CampaignNexus.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CampaignNexus.Migrations
 {
     [DbContext(typeof(CampaignNexusDbContext))]
-    partial class CampaignNexusDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250227192839_UpdatesCampaignModal")]
+    partial class UpdatesCampaignModal
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -529,6 +532,9 @@ namespace CampaignNexus.Migrations
                     b.Property<string>("CampaignPicUrl")
                         .HasColumnType("text");
 
+                    b.Property<int?>("CharacterId")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("timestamp without time zone");
 
@@ -543,6 +549,8 @@ namespace CampaignNexus.Migrations
                         .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CharacterId");
 
                     b.HasIndex("OwnerId");
 
@@ -2018,13 +2026,13 @@ namespace CampaignNexus.Migrations
                         {
                             Id = "dbc40bc6-0829-4ac5-a3ed-180f5e916a5f",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f92dd099-4573-4dcb-a3fe-e7d367850aaf",
+                            ConcurrencyStamp = "977f6027-4b76-4ce0-9b45-97b70f4cd01d",
                             Email = "Clonch@mr.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAIAAYagAAAAEA+UaFD9a5c9+hDQQBQ4DTBzBiYHy37SLVW25v1OFGsYlHP0HwK/UI0DWBw0Pa4rLg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPV9ZzOkoFOYYOx+UOb2MvZjlvmrtSG2Mp45gZn1HVZppxnYD6u/NzU/nEML9mgKcQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "79aca043-d32f-43b1-83b5-fb8ce00b89cd",
+                            SecurityStamp = "a007f28f-b1c5-4457-a10d-164091e777c8",
                             TwoFactorEnabled = false,
                             UserName = "ClonchMr"
                         },
@@ -2032,13 +2040,13 @@ namespace CampaignNexus.Migrations
                         {
                             Id = "8b0ba53c-ee98-4415-a5cb-bb249d8631e5",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "971e062d-b0e6-4c32-9e91-b9b8ad4c72d8",
+                            ConcurrencyStamp = "f25e1546-972b-4750-9dc5-3878c3864b25",
                             Email = "BleeMull@D20.Live",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAIAAYagAAAAEGLHH4K9IOd5EAEb08TRD8sZMjZBtU6YLpzaVchOe+rCumJzfjJtprvZJ2Syg1AmjA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEI8bDQ2OG2hWhfS7YNtI+ezYbZ+apxAqMGFXNWt/LhGiSCqJNMTCAe6Ie0LnkRkmfQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "78c23153-db1b-4199-a2ed-ed29c9bff850",
+                            SecurityStamp = "ed2c35a7-0a09-4d98-bfc3-6af494f25951",
                             TwoFactorEnabled = false,
                             UserName = "BLeeM"
                         },
@@ -2046,13 +2054,13 @@ namespace CampaignNexus.Migrations
                         {
                             Id = "7bd95d37-7864-4a41-9002-9c40eba9d310",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b301323a-8f76-4c1a-b044-640592abbf4e",
+                            ConcurrencyStamp = "7b3da5dd-3fd6-4a96-8fc2-5442cc26d2c3",
                             Email = "ShepardN7@Nrmdy.gov",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAIAAYagAAAAEFhWzXxEfJ7d2KmNyum5aVTuGj5M4S7N6zlY5wlNJYy8rv2hThERmTARv95RF2LZLQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKFfXtm/p9KivH4tGhBN1FgLq53xf+etMvAwZjJ0VWKa5u2Lx+kP01T39v+Nc+kAmQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b7877698-94f1-4f14-a109-44a8e7a14129",
+                            SecurityStamp = "47195da9-671b-4258-8fe8-89c19de93f82",
                             TwoFactorEnabled = false,
                             UserName = "ShepCmndr"
                         });
@@ -2175,6 +2183,10 @@ namespace CampaignNexus.Migrations
 
             modelBuilder.Entity("CampaignNexus.Models.Campaign", b =>
                 {
+                    b.HasOne("CampaignNexus.Models.Character", null)
+                        .WithMany("Campaigns")
+                        .HasForeignKey("CharacterId");
+
                     b.HasOne("CampaignNexus.Models.UserProfile", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
@@ -2434,6 +2446,8 @@ namespace CampaignNexus.Migrations
             modelBuilder.Entity("CampaignNexus.Models.Character", b =>
                 {
                     b.Navigation("Abilities");
+
+                    b.Navigation("Campaigns");
 
                     b.Navigation("CharacterAbilities");
 

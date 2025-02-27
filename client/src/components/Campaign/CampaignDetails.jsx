@@ -213,8 +213,13 @@ export const CampaignDetails = ({ loggedInUser, darkMode }) => {
             </Col>
           </Row>
         )}
+
+        <Container className="campaignDetails-description-container mt-5">
+          <p>{campaign.campaignDescription}</p>
+        </Container>
         {campaignCharacters != null && (
           <Row className="campaignPlayers-container mt-5">
+            <h4>Campaign Members</h4>
             <Col>
               {campaignCharacters.map((character, index) =>
                 index % 2 === 0 ? (
@@ -301,9 +306,6 @@ export const CampaignDetails = ({ loggedInUser, darkMode }) => {
             </Col>
           </Row>
         )}
-        <Container className="campaignDetails-description-container mt-5">
-          <p>{campaign.campaignDescription}</p>
-        </Container>
 
         <RenderLogs
           loggedInUser={loggedInUser}
@@ -328,16 +330,10 @@ export const CampaignDetails = ({ loggedInUser, darkMode }) => {
               </Col>
             )}
           <Col>
-            {loggedInUser.id === campaign.ownerId ? (
+            {loggedInUser.id === campaign.ownerId && (
               <Button className="btn-primary" onClick={deleteToggle}>
                 Delete Campaign
               </Button>
-            ) : campaign.characters?.some(
-                (c) => c.userId === loggedInUser.id
-              ) ? (
-              <Button className="btn-primary">Leave Campaign</Button>
-            ) : (
-              ""
             )}
           </Col>
         </Row>
