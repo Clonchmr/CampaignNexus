@@ -11,6 +11,7 @@ export const InviteDetailsModal = ({
   darkMode,
   inviteDetailsModal,
   inviteDetailsToggle,
+  pendingInvitesToggle,
   detailsModalTarget,
   loggedInUser,
   pendingUserInvites,
@@ -35,6 +36,7 @@ export const InviteDetailsModal = ({
 
     acceptInvite(characterCampaignObj).then(() => {
       inviteDetailsToggle();
+      pendingInvitesToggle();
       getPendingInvites(loggedInUser.id, null).then(
         () => setPendingUserInvites
       );

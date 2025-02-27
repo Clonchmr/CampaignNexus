@@ -77,6 +77,7 @@ export const PendingInvitesModal = ({
         darkMode={darkMode}
         inviteDetailsModal={inviteDetailsModal}
         inviteDetailsToggle={inviteDetailsToggle}
+        pendingInvitesToggle={pendingInvitesToggle}
         detailsModalTarget={detailsModalTarget}
         loggedInUser={loggedInUser}
         userPendingInvites={userPendingInvites}

@@ -253,7 +253,7 @@ public class InviteController : ControllerBase
             //Finds the invitation thats being accepted and changes its Status to Accepted
             Invitation invite = _dbContext
             .Invitations
-            .SingleOrDefault(i => i.RecipientId == character.UserProfile.Id && i.CampaignId == campaign.Id);
+            .SingleOrDefault(i => i.RecipientId == character.UserProfile.Id && i.CampaignId == campaign.Id && i.Status == "Pending");
 
             invite.Status = "Accepted";
 
