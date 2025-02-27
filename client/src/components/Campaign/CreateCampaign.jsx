@@ -101,8 +101,8 @@ export const CreateCampaign = ({ loggedInUser, darkMode }) => {
         </Form.Group>
         <Container className="mt-3">
           <Image
-            className="mb-4 mt-3"
-            id="campaignDescription-image"
+            className="mb-4 mt-3 campaignDescription-image"
+            id=""
             src={uploadedImage}
             width={300}
           />
