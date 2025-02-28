@@ -16,7 +16,7 @@ public class CharacterDTO
     public string Gender { get; set; }
     public int Age { get; set; }
     public string Faith { get; set; }
-    public string SpeciesId { get; set; }
+    public int SpeciesId { get; set; }
     public SpeciesDTO Species { get; set; }
     public int ClassId { get; set; }
     public ClassDTO Class { get; set; }

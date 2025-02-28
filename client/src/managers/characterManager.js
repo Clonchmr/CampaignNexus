@@ -2,7 +2,11 @@ const _apiString = "/api/character";
 
 //Gets all characters for a user, or for a campaign
 //Include either a userId or a campaignId
-export const getCharacters = async (userId = null, campaignId = null) => {
+export const getCharacters = async (
+  userId = null,
+  campaignId = null,
+  count = null
+) => {
   const params = new URLSearchParams();
 
   if (userId !== null) {
@@ -11,6 +15,10 @@ export const getCharacters = async (userId = null, campaignId = null) => {
 
   if (campaignId !== null) {
     params.append("campaignId", campaignId);
+  }
+
+  if (count !== null) {
+    params.append("count", count);
   }
 
   const url = params.toString()
