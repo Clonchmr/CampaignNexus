@@ -20,7 +20,7 @@ public class CharacterController : ControllerBase
     //Gets all characters for either a user, or a campaign
     [HttpGet]
     [Authorize]
-    public IActionResult GetCharacters([FromQuery] int? userId, [FromQuery] int? campaignId)
+    public IActionResult GetCharacters([FromQuery] int? userId, [FromQuery] int? campaignId, [FromQuery] int? count)
     {
         try
         {
@@ -66,6 +66,12 @@ public class CharacterController : ControllerBase
                 }
             }
 
+            //Checks to see if count has a value, and if so adds to the query
+            if (count.HasValue)
+            {
+                query = query.Take(count.Value);
+            }
+
             return Ok(query
             .Select(c => new CharacterDTO
             {
@@ -79,12 +85,19 @@ public class CharacterController : ControllerBase
                     UserName = c.UserProfile.IdentityUser.UserName
                 } : null,
                 Name = c.Name,
+                SpeciesId = c.SpeciesId,
+                Species = new SpeciesDTO 
+                {
+                    Id = c.SpeciesId,
+                    SpeciesName = c.Species.SpeciesName   
+                }, 
                 ClassId = c.ClassId,
                 Class = new ClassDTO
                 {
                     Id = c.Class.Id,
                     ClassName = c.Class.ClassName
                 },
+                
                 CharacterPicUrl = c.CharacterPicUrl
             }));
         }

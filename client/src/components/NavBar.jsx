@@ -20,6 +20,7 @@ import "../styles/nav.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getPendingInvites } from "../managers/invitationManager";
 import { PendingInvitesModal } from "./Modals/Navbar/PendingInvitesModal";
+import { getCharacters } from "../managers/characterManager";
 
 export const NavBar = ({
   loggedInUser,
@@ -28,6 +29,7 @@ export const NavBar = ({
   setDarkMode,
 }) => {
   const [userCampaigns, setUserCampaigns] = useState([]);
+  const [userCharacters, setUserCharacters] = useState([]);
   const [userPendingInvites, setUserPendingInvites] = useState([]);
   const [pendingInvitesModal, setPendingInvitesModal] = useState(false);
   const [inviteDetailsModal, setInviteDetailsModal] = useState(false);
@@ -47,6 +49,7 @@ export const NavBar = ({
   useEffect(() => {
     if (loggedInUser && loggedInUser.id) {
       getCampaignsByUser(loggedInUser.id, 3, true).then(setUserCampaigns);
+      getCharacters(loggedInUser.id, null, 3).then(setUserCharacters);
     }
   }, [loggedInUser]);
 
@@ -97,6 +100,20 @@ export const NavBar = ({
                     ))}
                   </NavDropdown>
                   <Nav.Link href="/campaigns/create">Create Campaign</Nav.Link>
+                  <NavDropdown title="Characters" id="charactersDropdown">
+                    <NavDropdown.Item href="/characters">
+                      View All
+                    </NavDropdown.Item>
+                    {userCharacters.length > 1 &&
+                      userCharacters.map((c) => (
+                        <NavDropdown.Item
+                          key={c.id}
+                          href={`/characters/${c.id}`}
+                        >
+                          {c.name}
+                        </NavDropdown.Item>
+                      ))}
+                  </NavDropdown>
                   <Nav.Link as="span">
                     <OverlayTrigger
                       placement="right"
