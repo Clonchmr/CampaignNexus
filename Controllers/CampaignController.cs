@@ -142,7 +142,7 @@ public class CampaignController : ControllerBase
                     },
                     Name = cc.Character.Name
                 }).ToList() : null,
-                CampaignLogs = campaign.CampaignLogs != null ? campaign.CampaignLogs.Select(l => new CampaignLogDTO
+                 CampaignLogs = campaign.CampaignLogs != null ? campaign.CampaignLogs.Select(l => new CampaignLogDTO
                 {
                     Id = l.Id,
                     CampaignId = id,
