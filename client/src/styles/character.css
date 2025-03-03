@@ -1,0 +1,26 @@
+.characterSheet-traits {
+  border: 2px ridge var(--primary);
+  border-radius: 1rem;
+  height: max-content;
+  width: max-content;
+  padding: 1rem 0;
+}
+
+.characterSheet-abilityScore {
+  width: 2.6rem;
+  margin: 0.4rem auto 0.5rem auto;
+  border-radius: 4rem;
+  font-weight: bold;
+}
+
+.characterSheet-savingThrowsColumn {
+  height: max-content;
+}
+
+.characterSheet-abilityScore-btn {
+  background-color: transparent;
+}
+
+.diceIcon:hover {
+  cursor: pointer;
+}
