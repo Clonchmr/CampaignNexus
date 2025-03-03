@@ -37,3 +37,18 @@ export const getCharacters = async (
 
   return response.json();
 };
+
+//Gets a character by its id
+export const getCharacterById = async (characterId) => {
+  const response = await fetch(`${_apiString}/${characterId}`);
+
+  if (response === 404) {
+    return response.text();
+  }
+
+  if (!response.ok) {
+    throw new Error(`HTTP Error! Status: ${response.status}`);
+  }
+
+  return response.json();
+};

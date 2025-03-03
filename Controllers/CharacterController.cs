@@ -97,7 +97,7 @@ public class CharacterController : ControllerBase
                     Id = c.Class.Id,
                     ClassName = c.Class.ClassName
                 },
-                
+                Level = c.Level,
                 CharacterPicUrl = c.CharacterPicUrl
             }));
         }
@@ -105,6 +105,138 @@ public class CharacterController : ControllerBase
         {
             Console.Error.WriteLine($"Error in GetCharacters {ex}");
             return StatusCode(500, "An error occurred while retrieving characters");
+        }
+    }
+
+    //Gets a character by its id
+    [HttpGet("{id}")]
+    [Authorize]
+    public IActionResult GetById(int id)
+    {
+        try
+        {
+            Character character = _dbContext
+                .Characters
+                .Include(c => c.Species)
+                .Include(c => c.Class)
+                .Include(c => c.SubClass)
+                .Include(c => c.Alignment)
+                .Include(c => c.CharacterItems)
+                    .ThenInclude(ci => ci.Item)
+                .Include(c => c.CharacterAbilities)
+                    .ThenInclude(ca => ca.Ability)
+                .Include(c => c.CharacterCampaigns)
+                    .ThenInclude(cc => cc.Campaign)
+                .Include(c => c.UserProfile)
+                    .ThenInclude(up => up.IdentityUser)
+                .SingleOrDefault(c => c.Id == id);
+
+            //ensure the character exists
+            if (character == null)
+            {
+                return NotFound(new {message = "That character does not exist"});
+            }
+
+            return Ok(new CharacterDTO
+            {
+                Id = character.Id,
+                UserId = character.UserId,
+                UserProfile = new UserProfileDTO
+                {
+                    Id = character.UserProfile.Id,
+                    FirstName = character.UserProfile.FirstName,
+                    LastName = character.UserProfile.LastName,
+                    Email = character.UserProfile.IdentityUser.Email,
+                    UserName = character.UserProfile.IdentityUser.UserName
+                },
+                Name = character.Name,
+                Height = character.Height,
+                Weight = character.Weight,
+                Gender = character.Gender,
+                Age = character.Age,
+                Faith = character.Faith,
+                SpeciesId = character.SpeciesId,
+                Species = new SpeciesDTO 
+                {
+                    Id = character.SpeciesId,
+                    SpeciesName = character.Species.SpeciesName,
+                    Speed = character.Species.Speed
+                },
+                ClassId = character.ClassId,
+                Class = new ClassDTO
+                {
+                    Id = character.ClassId,
+                    ClassName = character.Class.ClassName,
+                    HitDie = character.Class.HitDie
+                },
+                SubClassId = character.SubClassId,
+                SubClass = character.SubClassId != null ? new SubClassDTO
+                {
+                    Id = character.SubClass.Id,
+                    Name = character.SubClass.Name
+                }: null,
+                Level = character.Level,
+                HitPoints = character.HitPoints,
+                Strength = character.Strength,
+                StrengthModifier = character.StrengthModifier,
+                Dexterity = character.Dexterity,
+                DexterityModifier = character.DexterityModifier,
+                Constitution = character.Constitution,
+                ConstitutionModifier = character.ConstitutionModifier,
+                Wisdom = character.Wisdom,
+                WisdomModifier = character.WisdomModifier,
+                Intelligence = character.Intelligence,
+                IntelligenceModifier = character.IntelligenceModifier,
+                Charisma = character.Charisma,
+                CharismaModifier = character.CharismaModifier,
+                AlignmentId = character.AlignmentId,
+                Alignment = new AlignmentDTO
+                {
+                    Id = character.AlignmentId,
+                    Name = character.Alignment.Name
+                },
+                Backstory = character.Backstory,
+                CharacterPicUrl = character.CharacterPicUrl,
+                CharacterItems = character.CharacterItems != null ? character.CharacterItems.Select(ci => new CharacterItemDTO
+                {
+                    Id = ci.Id,
+                    ItemId = ci.ItemId,
+                    Item = new ItemDTO
+                    {
+                        Id = ci.ItemId,
+                        ItemName = ci.Item.ItemName,
+                        ItemDescription = ci.Item.ItemDescription,
+                        Damage = ci.Item.Damage,
+                        ArmorClass = ci.Item.ArmorClass,
+                        Weight = ci.Item.Weight,
+                        Notes = ci.Item.Notes
+                    },
+                    Quantity = ci.Quantity,
+                    IsEquipped = ci.IsEquipped
+                }).ToList() : null,
+                CharacterAbilities = character.CharacterAbilities.Select(ca => new CharacterAbilityDTO
+                {
+                    AbilityId = ca.AbilityId,
+                    Ability = new AbilityDTO
+                    {
+                        Id = ca.AbilityId,
+                        AbilityName = ca.Ability.AbilityName,
+                        AbilityDescription = ca.Ability.AbilityDescription,
+                        AbilityType = ca.Ability.AbilityType,
+                        DiceNumber = ca.Ability.DiceNumber,
+                        NumberOfDice = ca.Ability.NumberOfDice,
+                        CastingTime = ca.Ability.CastingTime,
+                        Range = ca.Ability.Range,
+                        SavingThrow = ca.Ability.SavingThrow,
+                        Notes = ca.Ability.Notes
+                    }
+                }).ToList()
+            });
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error in GetById {ex}");
+            return StatusCode(500, "An error occurred fetching this character");
         }
     }
 }
