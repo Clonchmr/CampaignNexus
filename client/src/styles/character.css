@@ -24,3 +24,33 @@
 .diceIcon:hover {
   cursor: pointer;
 }
+
+.characterSheet-navTable thead tr th {
+  background-color: transparent;
+  border-color: black;
+  color: var(--text-color);
+}
+
+.characterSheet-navTable tbody tr td {
+  background-color: transparent !important;
+  border-color: black;
+  color: var(--text-color);
+}
+
+.nav-tabs .nav-link {
+  color: var(--text-color);
+}
+
+.nav-tabs .nav-link.active {
+  background-color: var(--primary);
+  color: var(--text-color);
+}
+.nav-tabs .nav-link.active:hover {
+  opacity: 0.9;
+}
+
+.toast,
+.toast-header {
+  background-color: var(--primary);
+  color: var(--text-primary);
+}
