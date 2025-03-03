@@ -207,6 +207,7 @@ public class CharacterController : ControllerBase
                         ItemName = ci.Item.ItemName,
                         ItemDescription = ci.Item.ItemDescription,
                         Damage = ci.Item.Damage,
+                        ItemType = ci.Item.ItemType,
                         ArmorClass = ci.Item.ArmorClass,
                         Weight = ci.Item.Weight,
                         Notes = ci.Item.Notes

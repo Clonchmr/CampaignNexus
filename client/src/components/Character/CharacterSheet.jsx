@@ -12,12 +12,14 @@ import {
 } from "react-bootstrap";
 import "../../styles/character.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { CharacterNav } from "./CharacterNav";
 
 export const CharacterSheet = ({ darkMode, loggedInUser }) => {
   const [character, setCharacter] = useState({});
   const [shakingIcon, setShakingIcon] = useState({});
   const [toastTarget, setToastTarget] = useState({});
   const [showToast, setShowToast] = useState(false);
+  const [armorClass, setArmorClass] = useState(10);
 
   const { characterId } = useParams();
 
@@ -26,6 +28,20 @@ export const CharacterSheet = ({ darkMode, loggedInUser }) => {
   useEffect(() => {
     getCharacterById(characterId).then(setCharacter);
   }, [characterId]);
+
+  useEffect(() => {
+    let armorClassValue = character.dexterityModifier;
+
+    character.characterItems?.map(
+      (i) => i.isEquipped && (armorClassValue += i.item?.armorClass)
+    );
+
+    if (armorClassValue <= 10) {
+      setArmorClass(10 + character.dexterityModifier);
+    } else {
+      setArmorClass(armorClassValue);
+    }
+  }, [character]);
 
   const handleSkillRoll = (i, skillName, modifier) => {
     const roll = Math.floor(Math.random() * (0, 21)) + modifier;
@@ -89,7 +105,7 @@ export const CharacterSheet = ({ darkMode, loggedInUser }) => {
           <Col className="characterSheet-traits">
             <span>
               <h6>AC</h6>
-              {10}
+              {armorClass}
             </span>
           </Col>
           <Col className="characterSheet-traits">
@@ -239,7 +255,9 @@ export const CharacterSheet = ({ darkMode, loggedInUser }) => {
                 <p>{`Cha ${skillModifier(character.charismaModifier)}`}</p>
               </Col>
             </Row>
-            <div>Navbar thingy</div>
+            <Container className="mt-5">
+              <CharacterNav character={character} setCharacter={setCharacter} />
+            </Container>
           </Col>
         </Row>
         <ToastContainer className="toastContainer p-5" position="bottom-end">
