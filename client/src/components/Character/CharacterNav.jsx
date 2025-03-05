@@ -70,12 +70,28 @@ export const CharacterNav = ({ character, setCharacter }) => {
                   <td>{i.item?.notes}</td>
                 </tr>
               ))}
-            <tr>
+            {character.characterAbilities
+              ?.filter((ca) => ca.ability?.abilityType.includes("Action"))
+              .map((a) => (
+                <tr key={a.ability?.id}>
+                  <td className="characterSheet-navTable">
+                    {a.ability?.abilityName}
+                  </td>
+                  <td>{a.ability?.range}</td>
+                  {a.ability?.diceNumber ? (
+                    <td>{`${a.ability?.numberOfDice} D${a.ability?.diceNumber}`}</td>
+                  ) : (
+                    <td></td>
+                  )}
+                  <td>{a.ability?.notes}</td>
+                </tr>
+              ))}
+            {/* <tr>
               <td>Unarmed Strike</td>
               <td>5 ft.</td>
               <td>{character.strengthModifier + 1}</td>
               <td></td>
-            </tr>
+            </tr> */}
           </tbody>
         </Table>
       </Tab>
@@ -100,24 +116,26 @@ export const CharacterNav = ({ character, setCharacter }) => {
             </tr>
           </thead>
           <tbody>
-            {character.characterAbilities?.map((a) => (
-              <tr key={a.ability?.id}>
-                <td>{a.ability?.abilityName}</td>
-                <td>{a.ability?.castingTime}</td>
-                <td>{a.ability?.range}</td>
-                <td>
-                  {a.ability?.savingThrow
-                    ? `${spellSaveDc} ${a.ability?.savingThrow}`
-                    : `+ ${spellAttack}`}
-                </td>
-                <td>
-                  {a.ability?.numberOfDice
-                    ? `${a.ability?.numberOfDice} d${a.ability?.diceNumber}`
-                    : ""}
-                </td>
-                <td>{a.ability?.notes}</td>
-              </tr>
-            ))}
+            {character.characterAbilities
+              ?.filter((ca) => !ca.ability?.abilityType.includes("Action"))
+              .map((a) => (
+                <tr key={a.ability?.id}>
+                  <td>{a.ability?.abilityName}</td>
+                  <td>{a.ability?.castingTime}</td>
+                  <td>{a.ability?.range}</td>
+                  <td>
+                    {a.ability?.savingThrow
+                      ? `${spellSaveDc} ${a.ability?.savingThrow}`
+                      : `+ ${spellAttack}`}
+                  </td>
+                  <td>
+                    {a.ability?.numberOfDice
+                      ? `${a.ability?.numberOfDice} d${a.ability?.diceNumber}`
+                      : ""}
+                  </td>
+                  <td>{a.ability?.notes}</td>
+                </tr>
+              ))}
           </tbody>
         </Table>
       </Tab>
