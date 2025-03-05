@@ -17,7 +17,6 @@ import { getCharacterById } from "../../managers/characterManager";
 export const CharacterNav = ({ character, setCharacter }) => {
   const [spellSaveDc, setSpellSaveDc] = useState(0);
   const [spellAttack, setSpellAttack] = useState(0);
-  const [armorClass, setArmorClass] = useState(10);
   const { darkMode, setDarkMode } = useContext(ThemeContext);
 
   useEffect(() => {
@@ -44,20 +43,6 @@ export const CharacterNav = ({ character, setCharacter }) => {
 
     setSpellSaveDc(spellcastingAbility + character.level + 8);
     setSpellAttack(spellcastingAbility + character.level);
-  }, [character]);
-
-  useEffect(() => {
-    let armorClassValue = 0;
-
-    character.characterItems?.map(
-      (i) => i.isEquipped && (armorClassValue += i.armorClass)
-    );
-
-    if (armorClassValue <= 10) {
-      setArmorClass(10);
-    } else {
-      setArmorClass(armorClassValue);
-    }
   }, [character]);
 
   return (

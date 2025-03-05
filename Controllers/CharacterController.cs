@@ -240,4 +240,65 @@ public class CharacterController : ControllerBase
             return StatusCode(500, "An error occurred fetching this character");
         }
     }
+
+     [HttpPost]
+     [Authorize]
+     public IActionResult NewCharacter([FromBody] CharacterDTO character)
+     {
+         try
+         {
+            //Find the user and ensure they exist
+             UserProfile user = _dbContext
+            .UserProfiles
+            .SingleOrDefault(up => up.Id == character.UserId);
+
+            if (user == null)
+            {
+                return BadRequest("That user does not exist");
+            }
+
+            Character characterToAdd = new Character
+            {
+                UserId = character.UserId,
+                Name = character.Name,
+                Height = character.Height,
+                Weight = character.Weight,
+                Gender = character.Gender,
+                Age = character.Age,
+                Faith = character.Faith,
+                SpeciesId = character.SpeciesId,
+                ClassId = character.ClassId,
+                Strength = character.Strength,
+                Dexterity = character.Dexterity,
+                Constitution = character.Constitution,
+                Wisdom = character.Wisdom,
+                Intelligence = character.Intelligence,
+                Charisma = character.Charisma,
+                AlignmentId = character.AlignmentId,
+                Backstory = character.Backstory,
+                CharacterPicUrl = character.CharacterPicUrl
+            };
+
+            _dbContext.Characters.Add(characterToAdd);
+
+            _dbContext.SaveChanges();
+
+            var characterAbilities = character.CharacterAbilities.ToList().Select(ability => new CharacterAbility
+            {
+                CharacterId = characterToAdd.Id,
+                AbilityId = ability.AbilityId
+            }).ToList();
+
+            _dbContext.CharacterAbilities.AddRange(characterAbilities);
+            _dbContext.SaveChanges();
+
+            return Created($"/api/character/{characterToAdd.Id}", characterToAdd);
+
+         }
+         catch (Exception ex)
+         {
+            Console.Error.WriteLine($"Error in NewCharacter {ex}");
+            return StatusCode(500, "An error occurred creating that character");
+         }
+     }
 }

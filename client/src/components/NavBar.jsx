@@ -114,6 +114,9 @@ export const NavBar = ({
                         </NavDropdown.Item>
                       ))}
                   </NavDropdown>
+                  <Nav.Link href="/characters/create">
+                    Create Character
+                  </Nav.Link>
                   <Nav.Link as="span">
                     <OverlayTrigger
                       placement="right"

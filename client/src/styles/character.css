@@ -54,3 +54,18 @@
   background-color: var(--primary);
   color: var(--text-primary);
 }
+
+.newCharacter-abilityScore {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 5rem;
+  height: 5rem;
+  margin: 0 3rem;
+
+  text-align: center;
+  font-size: 2.6rem;
+}
+
+.alertText {
+  font-size: 1rem;
+}

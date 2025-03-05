@@ -1324,28 +1324,36 @@ Two-Handed. This weapon requires two hands when you attack with it.
 
      //Override SaveChanges to automatically add default abilities to new characters
     public override int SaveChanges()
-    {
-        var addedCharacters = ChangeTracker.Entries<Character>()
-            .Where(e => e.State == EntityState.Added)
-            .Select(e => e.Entity);
+{
+    var addedCharacters = ChangeTracker.Entries<Character>()
+        .Where(e => e.State == EntityState.Added)
+        .Select(e => e.Entity)
+        .ToList(); 
 
-        var defaultAbilityIds = new[] {1, 2, 3, 4 };
-        foreach (var character in addedCharacters)
+          int result = base.SaveChanges();
+
+    var defaultAbilityIds = new[] { 1, 2, 3, 4 };
+    var newCharacterAbilities = new List<CharacterAbility>();
+
+    foreach (var character in addedCharacters)
+    {
+        foreach (var abilityId in defaultAbilityIds)
         {
-            foreach (var abilityId in defaultAbilityIds)
+            if (!CharacterAbilities.Any(ca => ca.CharacterId == character.Id && ca.AbilityId == abilityId))
             {
-                if (!CharacterAbilities.Any(ca => ca.CharacterId == character.Id && ca.AbilityId == abilityId))
+                newCharacterAbilities.Add(new CharacterAbility
                 {
-                    CharacterAbilities.Add(new CharacterAbility
-                    {
-                        CharacterId = character.Id,
-                        AbilityId = abilityId
-                    });
-                }
+                    CharacterId = character.Id,
+                    AbilityId = abilityId
+                });
             }
         }
-
-        return base.SaveChanges();
     }
+
+    CharacterAbilities.AddRange(newCharacterAbilities);
+
+    return base.SaveChanges();
+}
+
         
 }
