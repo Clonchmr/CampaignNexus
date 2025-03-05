@@ -52,3 +52,22 @@ export const getCharacterById = async (characterId) => {
 
   return response.json();
 };
+
+export const createCharacter = async (characterObj) => {
+  const response = await fetch(_apiString, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(characterObj),
+  });
+
+  if (response === 404) {
+    return response.text();
+  }
+  if (!response.ok) {
+    throw new Error(`HTTP Error! Status: ${response.status}`);
+  }
+
+  return response.json();
+};

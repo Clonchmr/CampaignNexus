@@ -110,3 +110,21 @@ button:focus-visible {
   font-family: "Cormorant Garamond", serif;
   font-weight: 700;
 }
+
+.btn-primary:disabled {
+  background-color: var(--primary);
+  border-color: transparent;
+  opacity: 0.5;
+}
+
+/* For WebKit browsers (Chrome, Safari, Edge) */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* For Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}

@@ -29,7 +29,15 @@ public class Character
     public int? SubClassId { get; set ;} = null;
     public SubClass SubClass { get; set; }
     public int Level { get; set; } = 1;
+    public void InitializeHitPoints() //ensures class is initialized before attempting to access HitDie
+    {
+        if (Class == null) throw new InvalidOperationException("Class must be assigned before rolling hit-points");
+
+         Random random = new Random();
+        _hitPoints = random.Next(1, Class.HitDie + 1) + ConstitutionModifier;
+    }
     private int _hitPoints;
+    [NotMapped]
     public int HitPoints 
     {
         get => _hitPoints;
@@ -42,13 +50,7 @@ public class Character
     public int DexterityModifier => AbilityScoreModifier(Dexterity);
     public int Constitution { get; set; } = 10;
     public int ConstitutionModifier => AbilityScoreModifier(Constitution);
-    public void InitializeHitPoints() //ensures class is initialized before attempting to access HitDie
-    {
-        if (Class == null) throw new InvalidOperationException("Class must be assigned before rolling hit-points");
-
-         Random random = new Random();
-        _hitPoints = random.Next(1, Class.HitDie + 1) + ConstitutionModifier;
-    }
+    
     public int Wisdom { get; set; } = 10;
     public int WisdomModifier => AbilityScoreModifier(Wisdom);
     public int Intelligence { get; set; } = 10;

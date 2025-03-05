@@ -39,7 +39,12 @@ export const Welcome = ({ loggedInUser }) => {
             </Button>
           </Col>
           <Col>
-            <Button className="btn-primary">Create a Character</Button>
+            <Button
+              className="btn-primary"
+              onClick={() => navigate("/characters/create")}
+            >
+              Create a Character
+            </Button>
           </Col>
         </Row>
       </Row>
