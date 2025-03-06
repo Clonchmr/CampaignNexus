@@ -69,3 +69,13 @@
 .alertText {
   font-size: 1rem;
 }
+
+#hpMethodSwitch {
+  height: 1.5rem;
+  width: 3rem;
+}
+
+#newCharacter-levelUpMethod {
+  width: 14rem;
+  margin: auto;
+}

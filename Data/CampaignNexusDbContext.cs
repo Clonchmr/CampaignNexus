@@ -1091,6 +1091,7 @@ Two-Handed. This weapon requires two hands when you attack with it.
                     Faith = "Jimmy Buffet",
                     SpeciesId = 2,
                     ClassId = 4,
+                    HitPoints = 10,
                     Strength = 10,
                     Dexterity = 12,
                     Constitution = 14,
@@ -1112,6 +1113,7 @@ Two-Handed. This weapon requires two hands when you attack with it.
                     Faith = "Fists",
                     SpeciesId = 3,
                     ClassId = 6,
+                    HitPoints = 10,
                     Strength = 10,
                     Dexterity = 14,
                     Constitution = 14,
@@ -1133,6 +1135,7 @@ Two-Handed. This weapon requires two hands when you attack with it.
                     Faith = "Lily",
                     SpeciesId = 6,
                     ClassId = 3,
+                    HitPoints = 12,
                     Strength = 8,
                     Dexterity = 14,
                     Constitution = 16,
@@ -1154,6 +1157,7 @@ Two-Handed. This weapon requires two hands when you attack with it.
                     Faith = "Axe",
                     SpeciesId = 4,
                     ClassId = 12,
+                    HitPoints = 15,
                     Strength = 17,
                     Dexterity = 12,
                     Constitution = 16,
@@ -1329,6 +1333,12 @@ Two-Handed. This weapon requires two hands when you attack with it.
         .Where(e => e.State == EntityState.Added)
         .Select(e => e.Entity)
         .ToList(); 
+
+        //On creation initialize a random amount of hitpoints based on class HitDIe and con modifier
+        foreach(Character character in addedCharacters)
+        {
+            character.InitializeHitPoints();
+        }
 
           int result = base.SaveChanges();
 
