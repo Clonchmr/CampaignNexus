@@ -13,6 +13,7 @@ import {
 import "../../styles/character.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { CharacterNav } from "./CharacterNav";
+import { CharacterLevelUpModal } from "../Modals/Character/CharacterLevelUpModal";
 
 export const CharacterSheet = ({ darkMode, loggedInUser }) => {
   const [character, setCharacter] = useState({});
@@ -20,10 +21,12 @@ export const CharacterSheet = ({ darkMode, loggedInUser }) => {
   const [toastTarget, setToastTarget] = useState({});
   const [showToast, setShowToast] = useState(false);
   const [armorClass, setArmorClass] = useState(10);
+  const [showModal, setShowModal] = useState(false);
 
   const { characterId } = useParams();
 
   const toastToggle = () => setShowToast(!showToast);
+  const modalToggle = () => setShowModal(!showModal);
 
   useEffect(() => {
     getCharacterById(characterId).then(setCharacter);
@@ -44,7 +47,7 @@ export const CharacterSheet = ({ darkMode, loggedInUser }) => {
   }, [character]);
 
   const handleSkillRoll = (i, skillName, modifier) => {
-    const roll = Math.floor(Math.random() * (0, 21)) + modifier;
+    const roll = Math.floor(Math.random() * (21 - 1) + 1) + modifier;
     setToastTarget({ name: skillName, modifier: modifier, roll: roll });
     setShakingIcon((prev) => ({ ...prev, [i]: true }));
 
@@ -90,7 +93,9 @@ export const CharacterSheet = ({ darkMode, loggedInUser }) => {
       >
         <Row className="characterSheet-header mb-5">
           <Col>
-            <Button className="btn-primary">Level Up!</Button>
+            <Button className="btn-primary" onClick={modalToggle}>
+              Level Up!
+            </Button>
           </Col>
           <Col>
             <Button className="btn-primary">Edit Character</Button>
@@ -282,6 +287,13 @@ export const CharacterSheet = ({ darkMode, loggedInUser }) => {
           <Button className="mt-3">Delete Character</Button>
         )}
       </Container>
+      <CharacterLevelUpModal
+        modalToggle={modalToggle}
+        showModal={showModal}
+        character={character}
+        setCharacter={setCharacter}
+        skillModifier={skillModifier}
+      />
     </Container>
   );
 };

@@ -53,6 +53,8 @@ export const getCharacterById = async (characterId) => {
   return response.json();
 };
 
+//Creates a new character
+//Expects a character object
 export const createCharacter = async (characterObj) => {
   const response = await fetch(_apiString, {
     method: "POST",
@@ -70,4 +72,44 @@ export const createCharacter = async (characterObj) => {
   }
 
   return response.json();
+};
+
+//Levels up a character
+//Expects an object with each ability score, level, and hitPoints
+export const levelUpCharacter = async (levelUpObject) => {
+  const response = await fetch(`${_apiString}/level/${levelUpObject.id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(levelUpObject),
+  });
+
+  if (response === 404) {
+    return response.text();
+  }
+
+  if (!response.ok) {
+    throw new Error(`HTTP Error! Status: ${response.status}`);
+  }
+};
+
+//Updates a characters information
+//Expects an object with name, height, weight, gender, faith, backstory, alignmentId, and characterPicUrl
+export const updateCharacter = async (characterObj) => {
+  const response = await fetch(`${_apiString}/update/${characterObj.id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(characterObj),
+  });
+
+  if (response === 404) {
+    return response.text();
+  }
+
+  if (!response.ok) {
+    throw new Error(`HTTP Error! Status ${response.status}`);
+  }
 };

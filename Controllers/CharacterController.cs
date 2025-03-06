@@ -119,7 +119,7 @@ public class CharacterController : ControllerBase
                 .Characters
                 .Include(c => c.Species)
                 .Include(c => c.Class)
-                .Include(c => c.SubClass)
+                    .ThenInclude(cl => cl.SubClasses)
                 .Include(c => c.Alignment)
                 .Include(c => c.CharacterItems)
                     .ThenInclude(ci => ci.Item)
@@ -167,7 +167,13 @@ public class CharacterController : ControllerBase
                 {
                     Id = character.ClassId,
                     ClassName = character.Class.ClassName,
-                    HitDie = character.Class.HitDie
+                    HitDie = character.Class.HitDie,
+                    SubClasses = character.Class.SubClasses.Select(sc => new SubClassDTO
+                    {
+                        Id = sc.Id,
+                        Name = sc.Name,
+                        Description = sc.Description
+                    }).ToList()
                 },
                 SubClassId = character.SubClassId,
                 SubClass = character.SubClassId != null ? new SubClassDTO
@@ -197,6 +203,7 @@ public class CharacterController : ControllerBase
                 },
                 Backstory = character.Backstory,
                 CharacterPicUrl = character.CharacterPicUrl,
+                RollForHp = character.RollForHp,
                 CharacterItems = character.CharacterItems != null ? character.CharacterItems.Select(ci => new CharacterItemDTO
                 {
                     Id = ci.Id,
@@ -257,6 +264,16 @@ public class CharacterController : ControllerBase
                 return BadRequest("That user does not exist");
             }
 
+            //Load class so HitPoints can be initialized on creation
+            Class characterClass = _dbContext
+            .Classes
+            .SingleOrDefault(c => c.Id == character.ClassId);
+
+            if (characterClass == null)
+            {
+                return BadRequest("Class does not exist");
+            }
+
             Character characterToAdd = new Character
             {
                 UserId = character.UserId,
@@ -268,6 +285,8 @@ public class CharacterController : ControllerBase
                 Faith = character.Faith,
                 SpeciesId = character.SpeciesId,
                 ClassId = character.ClassId,
+                Class = characterClass,
+                RollForHp = character.RollForHp,
                 Strength = character.Strength,
                 Dexterity = character.Dexterity,
                 Constitution = character.Constitution,
@@ -300,5 +319,75 @@ public class CharacterController : ControllerBase
             Console.Error.WriteLine($"Error in NewCharacter {ex}");
             return StatusCode(500, "An error occurred creating that character");
          }
+     }
+
+     [HttpPut("update/{id}")]
+     [Authorize]
+     public IActionResult UpdateCharacter(int id, UpdateCharacterDTO character)
+     {
+        try
+        {
+            Character foundCharacter = _dbContext
+            .Characters
+            .SingleOrDefault(c => c.Id == id);
+
+            if (foundCharacter == null)
+            {
+                return NotFound("That character does not exist");
+            }
+
+            foundCharacter.Name = character.Name;
+            foundCharacter.Weight = character.Weight;
+            foundCharacter.Gender = character.Gender;
+            foundCharacter.AlignmentId = character.AlignmentId;
+            foundCharacter.Faith = character.Faith;
+            foundCharacter.Backstory = character.Backstory;
+            foundCharacter.CharacterPicUrl = character.CharacterPicUrl;
+
+            _dbContext.SaveChanges();
+
+            return NoContent();
+        }
+        catch(Exception ex)
+        {
+            Console.Error.WriteLine($"Error in UpdateCharacter {ex}");
+            return StatusCode(500, "There was an error updating that character");
+        }
+     }
+
+     [HttpPut("level/{id}")]
+     [Authorize]
+     public IActionResult LevelUp(int id, LevelUpDTO character)
+     {
+        try
+        {
+            Character foundCharacter = _dbContext
+            .Characters
+            .SingleOrDefault(c => c.Id == id);
+
+            if (foundCharacter == null)
+            {
+                return NotFound("That character does not exist");
+            }
+
+            foundCharacter.Strength = character.Strength;
+            foundCharacter.Dexterity = character.Dexterity;
+            foundCharacter.Constitution = character.Constitution;
+            foundCharacter.Wisdom = character.Wisdom;
+            foundCharacter.Intelligence = character.Intelligence;
+            foundCharacter.Charisma = character.Charisma;
+            foundCharacter.SubClassId = character.SubClassId;
+            foundCharacter.Level = character.Level;
+            foundCharacter.HitPoints = character.HitPoints;
+
+            _dbContext.SaveChanges();
+
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error in LevelUp {ex}");
+            return StatusCode(500, "There was an error leveling up this character");
+        }
      }
 }

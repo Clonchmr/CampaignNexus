@@ -9,6 +9,8 @@ export const CreateStepOne = ({
   buttonIsDisabled,
   setObjectLength,
   setStep,
+  rollForHp,
+  setRollForHp,
 }) => {
   const { darkMode, setDarkMode } = useContext(ThemeContext);
   return (
@@ -47,6 +49,7 @@ export const CreateStepOne = ({
               className="lowerCaseFont"
               type="number"
               name="inches"
+              max="11"
               value={character.inches}
               required
               placeholder="in."
@@ -68,7 +71,7 @@ export const CreateStepOne = ({
           onChange={(e) => handleInputChange(e)}
         />
       </Form.Group>
-      <Form.Group>
+      <Form.Group className="mb-4">
         <Form.Label htmlFor="newCharacter-age">Age</Form.Label>
         <Form.Control
           id="newCharacter-age"
@@ -94,7 +97,19 @@ export const CreateStepOne = ({
           onChange={(e) => handleInputChange(e)}
         />
       </Form.Group>
-      <Form.Group>
+      <Form.Group id="newCharacter-levelUpMethod">
+        <Form.Label htmlFor="hpMethodSwitch">Levelup health method</Form.Label>
+        <Form.Check
+          type="switch"
+          id="hpMethodSwitch"
+          className="lowerCaseFont"
+          checked={rollForHp}
+          label={rollForHp ? "Roll for health" : "Take median health value"}
+          onChange={() => setRollForHp(!rollForHp)}
+        />
+      </Form.Group>
+
+      <Form.Group className="mt-4">
         <Button
           className="btn-primary"
           disabled={buttonIsDisabled}

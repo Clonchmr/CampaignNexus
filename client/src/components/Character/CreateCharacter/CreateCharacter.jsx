@@ -21,6 +21,7 @@ export const CreateCharacter = ({ loggedInUser }) => {
   const [buttonIsDisabled, setButtonIsDisabled] = useState(true);
   const [objectLength, setObjectLength] = useState(6);
   const [uploadedImage, setUploadedImage] = useState(null);
+  const [rollForHp, setRollForHp] = useState(false);
 
   const navigate = useNavigate();
 
@@ -74,6 +75,7 @@ export const CreateCharacter = ({ loggedInUser }) => {
       faith: character.faith,
       speciesId: parseInt(character.speciesId),
       classId: parseInt(chosenClass.id),
+      rollForHp: rollForHp,
       strength: parseInt(character.strength),
       dexterity: parseInt(character.dexterity),
       constitution: parseInt(character.constitution),
@@ -103,6 +105,8 @@ export const CreateCharacter = ({ loggedInUser }) => {
           buttonIsDisabled={buttonIsDisabled}
           setStep={setStep}
           setObjectLength={setObjectLength}
+          rollForHp={rollForHp}
+          setRollForHp={setRollForHp}
         />
       )}
       {step === 2 && (

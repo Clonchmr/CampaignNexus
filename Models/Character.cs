@@ -33,17 +33,16 @@ public class Character
     {
         if (Class == null) throw new InvalidOperationException("Class must be assigned before rolling hit-points");
 
-         Random random = new Random();
-        _hitPoints = random.Next(1, Class.HitDie + 1) + ConstitutionModifier;
+        HitPoints =  Class.HitDie + ConstitutionModifier;
     }
     private int _hitPoints;
-    [NotMapped]
+    
     public int HitPoints 
     {
         get => _hitPoints;
         set => _hitPoints = value;
     }
-    
+    public bool RollForHp { get; set; } = false;
     public int Strength { get; set; } = 10;
     public int StrengthModifier => AbilityScoreModifier(Strength);
     public int Dexterity { get; set; } = 10;
