@@ -8,8 +8,8 @@ import {
 } from "../../../managers/characterManager";
 
 export const CharacterLevelUpModal = ({
-  modalToggle,
-  showModal,
+  levelModalToggle,
+  showLevelModal,
   character,
   skillModifier,
   setCharacter,
@@ -73,7 +73,7 @@ export const CharacterLevelUpModal = ({
     levelUpCharacter(characterObj).then(() => {
       getCharacterById(character.id).then(setCharacter);
     });
-    modalToggle();
+    levelModalToggle();
   };
 
   const handleInputChange = (e) => {
@@ -86,8 +86,8 @@ export const CharacterLevelUpModal = ({
   };
   return (
     <Modal
-      show={showModal}
-      onHide={modalToggle}
+      show={showLevelModal}
+      onHide={levelModalToggle}
       size="xl"
       data-bs-theme={darkMode ? "dark" : "light"}
     >
@@ -214,7 +214,7 @@ export const CharacterLevelUpModal = ({
         >
           Save
         </Button>{" "}
-        <Button className="btn-primary" onClick={modalToggle}>
+        <Button className="btn-primary" onClick={levelModalToggle}>
           Cancel
         </Button>
       </Modal.Footer>

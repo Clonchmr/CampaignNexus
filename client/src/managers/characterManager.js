@@ -113,3 +113,17 @@ export const updateCharacter = async (characterObj) => {
     throw new Error(`HTTP Error! Status ${response.status}`);
   }
 };
+
+//Deletes a character. Expects the character id
+export const deleteCharacter = async (id) => {
+  const response = await fetch(`${_apiString}/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (response === 404) {
+    return response.text();
+  }
+};
