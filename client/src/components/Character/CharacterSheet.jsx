@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getCharacterById } from "../../managers/characterManager";
 import {
   Button,
@@ -14,6 +14,7 @@ import "../../styles/character.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { CharacterNav } from "./CharacterNav";
 import { CharacterLevelUpModal } from "../Modals/Character/CharacterLevelUpModal";
+import { DeleteCharacterModal } from "../Modals/Character/DeleteCharacterModal";
 
 export const CharacterSheet = ({ darkMode, loggedInUser }) => {
   const [character, setCharacter] = useState({});
@@ -21,12 +22,15 @@ export const CharacterSheet = ({ darkMode, loggedInUser }) => {
   const [toastTarget, setToastTarget] = useState({});
   const [showToast, setShowToast] = useState(false);
   const [armorClass, setArmorClass] = useState(10);
-  const [showModal, setShowModal] = useState(false);
+  const [showLevelModal, setShowLevelModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
 
   const { characterId } = useParams();
+  const navigate = useNavigate();
 
   const toastToggle = () => setShowToast(!showToast);
-  const modalToggle = () => setShowModal(!showModal);
+  const levelModalToggle = () => setShowLevelModal(!showLevelModal);
+  const deleteModalToggle = () => setDeleteModal(!deleteModal);
 
   useEffect(() => {
     getCharacterById(characterId).then(setCharacter);
@@ -93,7 +97,7 @@ export const CharacterSheet = ({ darkMode, loggedInUser }) => {
       >
         <Row className="characterSheet-header mb-5">
           <Col>
-            <Button className="btn-primary" onClick={modalToggle}>
+            <Button className="btn-primary" onClick={levelModalToggle}>
               Level Up!
             </Button>
           </Col>
@@ -284,15 +288,22 @@ export const CharacterSheet = ({ darkMode, loggedInUser }) => {
           </Toast>
         </ToastContainer>
         {loggedInUser.id === character.userId && (
-          <Button className="mt-3">Delete Character</Button>
+          <Button className="mt-3" onClick={deleteModalToggle}>
+            Delete Character
+          </Button>
         )}
       </Container>
       <CharacterLevelUpModal
-        modalToggle={modalToggle}
-        showModal={showModal}
+        levelModalToggle={levelModalToggle}
+        showLevelModal={showLevelModal}
         character={character}
         setCharacter={setCharacter}
         skillModifier={skillModifier}
+      />
+      <DeleteCharacterModal
+        character={character}
+        deleteModal={deleteModal}
+        deleteModalToggle={deleteModalToggle}
       />
     </Container>
   );

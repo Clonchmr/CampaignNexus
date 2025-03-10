@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using CampaignNexus.Data;
 using CampaignNexus.Models;
 using CampaignNexus.Models.DTOs;
@@ -388,6 +389,46 @@ public class CharacterController : ControllerBase
         {
             Console.Error.WriteLine($"Error in LevelUp {ex}");
             return StatusCode(500, "There was an error leveling up this character");
+        }
+     }
+
+     [HttpDelete("{id}")]
+     [Authorize]
+     public IActionResult DeleteCharacter(int id)
+     {
+        try
+        {
+            //Ensures the character to be deleted exists
+            Character character = _dbContext
+            .Characters
+            .Include(c => c.UserProfile)
+            .SingleOrDefault(c => c.Id == id);
+
+            if (character == null) {
+                return NotFound("That character does not exist");
+            }
+
+             //Finds the logged in user and gets their UserProfile
+            var identityUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var profile = _dbContext
+            .UserProfiles
+            .SingleOrDefault(up => up.IdentityUserId == identityUserId);
+
+            if (profile.Id != character.UserId)
+            {
+                return Forbid();
+            }
+
+            _dbContext.Characters.Remove(character);
+            _dbContext.SaveChanges();
+
+            return NoContent();
+
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error in DeleteCharacter {ex}");
+            return StatusCode(500, "There was an error deleting that character");
         }
      }
 }

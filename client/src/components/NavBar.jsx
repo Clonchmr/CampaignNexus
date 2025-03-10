@@ -51,7 +51,7 @@ export const NavBar = ({
       getCampaignsByUser(loggedInUser.id, 3, true).then(setUserCampaigns);
       getCharacters(loggedInUser.id, null, 3).then(setUserCharacters);
     }
-  }, [loggedInUser]);
+  }, [loggedInUser, userCharacters.length, userCampaigns.length]);
 
   useEffect(() => {
     if (loggedInUser && loggedInUser.id) {
