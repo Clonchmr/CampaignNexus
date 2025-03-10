@@ -13,11 +13,16 @@ import "../../styles/character.css";
 import { ThemeContext } from "../../ThemeContext/ThemeContext";
 import { toggleEquipItem } from "../../managers/itemManager";
 import { getCharacterById } from "../../managers/characterManager";
+import { SpellOffcanvas } from "../OffCanvas/SpellOffcanvas";
 
 export const CharacterNav = ({ character, setCharacter }) => {
   const [spellSaveDc, setSpellSaveDc] = useState(0);
   const [spellAttack, setSpellAttack] = useState(0);
+  const [spellOffcanvas, setSpellOffcanvas] = useState(false);
+  const [spellTarget, setSpellTarget] = useState({});
   const { darkMode, setDarkMode } = useContext(ThemeContext);
+
+  const spellOffCanvasToggle = () => setSpellOffcanvas(!spellOffcanvas);
 
   useEffect(() => {
     const cClass = character.class?.className;
@@ -73,7 +78,14 @@ export const CharacterNav = ({ character, setCharacter }) => {
             {character.characterAbilities
               ?.filter((ca) => ca.ability?.abilityType.includes("Action"))
               .map((a) => (
-                <tr key={a.ability?.id}>
+                <tr
+                  key={a.ability?.id}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setSpellTarget(a);
+                    spellOffCanvasToggle();
+                  }}
+                >
                   <td className="characterSheet-navTable">
                     {a.ability?.abilityName}
                   </td>
@@ -119,7 +131,14 @@ export const CharacterNav = ({ character, setCharacter }) => {
             {character.characterAbilities
               ?.filter((ca) => !ca.ability?.abilityType.includes("Action"))
               .map((a) => (
-                <tr key={a.ability?.id}>
+                <tr
+                  key={a.ability?.id}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setSpellTarget(a);
+                    spellOffCanvasToggle();
+                  }}
+                >
                   <td>{a.ability?.abilityName}</td>
                   <td>{a.ability?.castingTime}</td>
                   <td>{a.ability?.range}</td>
@@ -138,10 +157,15 @@ export const CharacterNav = ({ character, setCharacter }) => {
               ))}
           </tbody>
         </Table>
+        <SpellOffcanvas
+          spellTarget={spellTarget}
+          spellOffCanvasToggle={spellOffCanvasToggle}
+          spellOffcanvas={spellOffcanvas}
+        />
       </Tab>
       <Tab eventKey="Inventory" title="Inventory">
         <p className="mt-4">{`Weight Carried: ${character.totalWeight} lbs.`}</p>
-        <Table className="characterSheet-navTable">
+        <Table hover className="characterSheet-navTable">
           <thead>
             <tr>
               <th>Name</th>
@@ -160,7 +184,14 @@ export const CharacterNav = ({ character, setCharacter }) => {
           </thead>
           <tbody>
             {character.characterItems?.map((i) => (
-              <tr key={i.item?.id}>
+              <tr
+                key={i.item?.id}
+                onClick={() => {
+                  setSpellTarget(i);
+                  spellOffCanvasToggle();
+                }}
+                style={{ cursor: "pointer" }}
+              >
                 <td>{i.item?.itemName}</td>
                 <td>{`${i.item?.weight} lbs.`}</td>
                 <td>{i.quantity}</td>
@@ -171,6 +202,7 @@ export const CharacterNav = ({ character, setCharacter }) => {
                       <Form.Label>Equipped</Form.Label>
                       <Form.Check
                         checked={i.isEquipped}
+                        onClick={(e) => e.stopPropagation()}
                         onChange={() => {
                           {
                             toggleEquipItem(i.id).then(() => {
