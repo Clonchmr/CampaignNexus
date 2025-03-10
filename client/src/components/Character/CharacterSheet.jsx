@@ -279,7 +279,7 @@ export const CharacterSheet = ({ darkMode, loggedInUser }) => {
           >
             <Toast.Header
               className="d-flex justify-content-between w-100"
-              closeButton={false}
+              closeButton
             >
               <strong className="mx-auto">{toastTarget.name}</strong>
               <small>{skillModifier(toastTarget.modifier)}</small>
