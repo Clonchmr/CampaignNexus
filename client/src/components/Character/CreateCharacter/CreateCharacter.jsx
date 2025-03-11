@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 
 import { getAllClasses } from "../../../managers/classManager";
-import { CreateStepFour } from "./CreateStepFour";
+import { CreateStepFive } from "./CreateStepFive";
 import { CreateStepThree } from "./CreateStepThree";
 import { CreateStepTwo } from "./CreateStepTwo";
 import { CreateStepOne } from "./CreateStepOne";
@@ -10,6 +10,7 @@ import { getAllAlignments } from "../../../managers/alignmentManager";
 import { getAllSpecies } from "../../../managers/speciesManager";
 import { createCharacter } from "../../../managers/characterManager";
 import { useNavigate } from "react-router-dom";
+import { CreateStepFour } from "./CreateStepFour";
 
 export const CreateCharacter = ({ loggedInUser }) => {
   const [step, setStep] = useState(1);
@@ -89,6 +90,11 @@ export const CreateCharacter = ({ loggedInUser }) => {
         { abilityId: character.abilityOneId },
         { abilityId: character.abilityTwoId },
       ],
+      characterItems: [
+        { itemId: character.armorItem },
+        { itemId: character.weaponItem },
+        { itemId: character.miscItem },
+      ],
     };
 
     createCharacter(characterObj).then((res) => {
@@ -133,6 +139,15 @@ export const CreateCharacter = ({ loggedInUser }) => {
       )}
       {step === 4 && (
         <CreateStepFour
+          character={character}
+          handleInputChange={handleInputChange}
+          setStep={setStep}
+          setObjectLength={setObjectLength}
+          buttonIsDisabled={buttonIsDisabled}
+        />
+      )}
+      {step === 5 && (
+        <CreateStepFive
           character={character}
           alignments={alignments}
           buttonIsDisabled={buttonIsDisabled}

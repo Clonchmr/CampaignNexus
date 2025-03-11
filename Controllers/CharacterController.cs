@@ -309,9 +309,24 @@ public class CharacterController : ControllerBase
                 AbilityId = ability.AbilityId
             }).ToList();
 
+
+            var characterItems = character.CharacterItems.ToList().Select(item => {
+                 var dbItem = _dbContext.Items.Find(item.ItemId);
+               return new CharacterItem
+            {
+                CharacterId = characterToAdd.Id,
+                ItemId = item.ItemId,
+                Item = dbItem,
+                Quantity = 1
+            };
+            }).ToList();
+
             _dbContext.CharacterAbilities.AddRange(characterAbilities);
+            _dbContext.CharacterItems.AddRange(characterItems);
             _dbContext.SaveChanges();
 
+           
+            
             return Created($"/api/character/{characterToAdd.Id}", characterToAdd);
 
          }

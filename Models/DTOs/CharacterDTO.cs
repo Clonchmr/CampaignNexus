@@ -47,7 +47,7 @@ public class CharacterDTO : LevelUpDTO
         {
             if (CharacterItems != null)
             {
-            return CharacterItems.Sum(i => i.Item.Weight * i.Quantity);
+            return CharacterItems.Sum(i => i.Item?.Weight * i.Quantity ?? 0);
             } 
             else
             {

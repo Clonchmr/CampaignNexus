@@ -17,3 +17,14 @@ export const toggleEquipItem = async (id) => {
     throw new Error(`HTTP Error! Status: ${response.status}`);
   }
 };
+
+//Gets all items
+export const getAllItems = async () => {
+  const response = await fetch(_apiString);
+
+  if (!response.ok) {
+    throw new Error(`HTTP Error! Status: ${response.status}`);
+  }
+
+  return response.json();
+};
