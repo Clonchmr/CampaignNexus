@@ -3,6 +3,7 @@ using System;
 using CampaignNexus.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CampaignNexus.Migrations
 {
     [DbContext(typeof(CampaignNexusDbContext))]
-    partial class CampaignNexusDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250305164805_HitPointsError")]
+    partial class HitPointsError
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -632,9 +635,6 @@ namespace CampaignNexus.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("HitPoints")
-                        .HasColumnType("integer");
-
                     b.Property<int>("Intelligence")
                         .HasColumnType("integer");
 
@@ -644,9 +644,6 @@ namespace CampaignNexus.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<bool>("RollForHp")
-                        .HasColumnType("boolean");
 
                     b.Property<int>("SpeciesId")
                         .HasColumnType("integer");
@@ -696,11 +693,9 @@ namespace CampaignNexus.Migrations
                             Faith = "Jimmy Buffet",
                             Gender = "Male",
                             Height = "6'2",
-                            HitPoints = 0,
                             Intelligence = 8,
                             Level = 1,
                             Name = "Marty Dickson",
-                            RollForHp = false,
                             SpeciesId = 2,
                             Strength = 10,
                             UserId = 2,
@@ -721,11 +716,9 @@ namespace CampaignNexus.Migrations
                             Faith = "Fists",
                             Gender = "Male",
                             Height = "4'0",
-                            HitPoints = 0,
                             Intelligence = 12,
                             Level = 1,
                             Name = "Garfunkle",
-                            RollForHp = false,
                             SpeciesId = 3,
                             Strength = 10,
                             UserId = 2,
@@ -746,11 +739,9 @@ namespace CampaignNexus.Migrations
                             Faith = "Lily",
                             Gender = "Male",
                             Height = "3'1",
-                            HitPoints = 0,
                             Intelligence = 10,
                             Level = 1,
                             Name = "F.R.I.E.N.D",
-                            RollForHp = false,
                             SpeciesId = 6,
                             Strength = 8,
                             UserId = 3,
@@ -771,11 +762,9 @@ namespace CampaignNexus.Migrations
                             Faith = "Axe",
                             Gender = "Male",
                             Height = "6'10",
-                            HitPoints = 0,
                             Intelligence = 8,
                             Level = 1,
                             Name = "Hasbeen",
-                            RollForHp = false,
                             SpeciesId = 4,
                             Strength = 17,
                             UserId = 3,
@@ -2025,13 +2014,13 @@ namespace CampaignNexus.Migrations
                         {
                             Id = "dbc40bc6-0829-4ac5-a3ed-180f5e916a5f",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c8464ee5-20a1-44e6-bab4-c5ebfd6786a7",
+                            ConcurrencyStamp = "21b123e3-7a99-4bc4-b570-a882522ef694",
                             Email = "Clonch@mr.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAIAAYagAAAAENWYB/dhspi4aiuHZeDEEaarr+dMV2l7ZEUUJ7H/G0Ffhsr0gy7ncHYzx/jEGftOCw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEVx0igJxhC1FJmYfJfqP/6mowuzyYTXO72uyIS5cTG5/hheIT87zYwDpPujUSYDIQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "9d9bf192-2b7e-4f23-97fc-b440e940bcd8",
+                            SecurityStamp = "aca082ef-f3d0-4a68-8744-3a346c557338",
                             TwoFactorEnabled = false,
                             UserName = "ClonchMr"
                         },
@@ -2039,13 +2028,13 @@ namespace CampaignNexus.Migrations
                         {
                             Id = "8b0ba53c-ee98-4415-a5cb-bb249d8631e5",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2c773f6a-e8b9-41e6-9268-282599c4297b",
+                            ConcurrencyStamp = "327fbf5c-c5c9-4604-9b95-ca1f9c6805d2",
                             Email = "BleeMull@D20.Live",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAIAAYagAAAAEKpgRVhtcFztjWDQSt+GaSeGJkgpfv+1G/QgDLmqNozCC2fMmM/a0DM80owTkRy2Vw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIyVYD1Wi7VfwJDKxLLnrGbAKQ9Tw6sCMljBNyYpIcm4yRim4uNyPTWMqWl7CTDTZQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "6a4bebdb-d910-4173-b3aa-efb2e58384f2",
+                            SecurityStamp = "88b34c4c-1490-4fab-ac69-614e4a84792f",
                             TwoFactorEnabled = false,
                             UserName = "BLeeM"
                         },
@@ -2053,13 +2042,13 @@ namespace CampaignNexus.Migrations
                         {
                             Id = "7bd95d37-7864-4a41-9002-9c40eba9d310",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f65e0092-31b6-414a-ac1b-48eafbfac7d9",
+                            ConcurrencyStamp = "444a6523-55ac-4e60-899f-847e52ca713f",
                             Email = "ShepardN7@Nrmdy.gov",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAIAAYagAAAAEHkYNoqUKghLFoSmzAQOeUWdl7KXOwN/vi7619pCpTiJJbF/CEwsyPdAmwZgY0iO2g==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGfMePHuXF/hf5qFDUT9ist1ChinSNUyiOt3ZS3PUqRncgF2XrigSZl/kpCo+yhKVA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "6c484650-1515-4406-9641-bbb68807089b",
+                            SecurityStamp = "ee48ee2d-e7a9-4d7a-b987-20244cf8124e",
                             TwoFactorEnabled = false,
                             UserName = "ShepCmndr"
                         });
