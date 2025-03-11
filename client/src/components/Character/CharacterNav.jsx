@@ -129,7 +129,7 @@ export const CharacterNav = ({ character, setCharacter }) => {
           </thead>
           <tbody>
             {character.characterAbilities
-              ?.filter((ca) => !ca.ability?.abilityType.includes("Action"))
+              ?.filter((ca) => !ca.ability?.abilityType?.includes("Action"))
               .map((a) => (
                 <tr
                   key={a.ability?.id}
