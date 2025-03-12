@@ -81,5 +81,4 @@ public class UpdateCharacterDTO
     public string Faith { get; set; }
     public int AlignmentId { get; set; }
     public string Backstory { get; set; } 
-    public string CharacterPicUrl { get; set; }
 }

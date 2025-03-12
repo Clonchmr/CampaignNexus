@@ -34,7 +34,7 @@ export const DeleteCharacterModal = ({
       onHide={deleteModalToggle}
       data-bs-theme={darkMode ? "dark" : "light"}
     >
-      <Modal.Header closeButton>{`Delete ${character.name}?`}</Modal.Header>
+      <Modal.Header closeButton>{`Delete ${character?.name}?`}</Modal.Header>
       <Modal.Body>
         <p>Are you sure you want to delete this character?</p>
         <p>This action cannot be reversed.</p>
