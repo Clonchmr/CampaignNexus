@@ -21,20 +21,20 @@ export const CharacterLevelUpModal = ({
   const [secondAttribute, setSecondAttribute] = useState("");
 
   useEffect(() => {
-    const classHitDie = character.class?.hitDie + 1;
-    if (character.rollForHp) {
+    const classHitDie = character?.class?.hitDie + 1;
+    if (character?.rollForHp) {
       const hpGain =
         Math.floor(Math.random() * (classHitDie - 1) + 1) +
-        character.constitutionModifier;
-      setNewHp(character.hitPoints + hpGain);
+        character?.constitutionModifier;
+      setNewHp(character?.hitPoints + hpGain);
     } else {
       const hpGain =
-        character.class?.hitDie / 2 + character.constitutionModifier;
-      setNewHp(character.hitPoints + hpGain);
+        character?.class?.hitDie / 2 + character?.constitutionModifier;
+      setNewHp(character?.hitPoints + hpGain);
     }
 
-    setLevelingUpTo(character.level + 1);
-  }, [character.level, character.hitPoints, character.constitutionModifier]);
+    setLevelingUpTo(character?.level + 1);
+  }, [character?.level, character?.hitPoints, character?.constitutionModifier]);
 
   const attributes = [
     "Strength",
@@ -94,7 +94,7 @@ export const CharacterLevelUpModal = ({
       <Modal.Header closeButton className="text-center">
         <h5>
           <Row>
-            <Col>{character.level}</Col>{" "}
+            <Col>{character?.level}</Col>{" "}
             <Col>{<FontAwesomeIcon icon="fa-solid fa-arrow-right" />} </Col>
             <Col>{levelingUpTo}</Col>
           </Row>
@@ -104,7 +104,7 @@ export const CharacterLevelUpModal = ({
         <Row className="text-center">
           <Col>
             <small>Old HP</small>
-            <p>{character.hitPoints}</p>
+            <p>{character?.hitPoints}</p>
           </Col>
           <Col>
             <small>New HP</small>
@@ -122,7 +122,7 @@ export const CharacterLevelUpModal = ({
               onChange={(e) => handleInputChange(e)}
             >
               <option value={0}>Choose Subclass</option>
-              {character.class?.subClasses?.map((sc) => (
+              {character?.class?.subClasses?.map((sc) => (
                 <option key={sc.id} value={sc.id}>
                   {sc.name}
                 </option>
@@ -134,33 +134,33 @@ export const CharacterLevelUpModal = ({
             <Row className="mb-4">
               <Col className="characterSheet-traits">
                 <small>Str</small>
-                <p>{skillModifier(character.strengthModifier)}</p>
-                <p>{character.strength}</p>
+                <p>{skillModifier(character?.strengthModifier)}</p>
+                <p>{character?.strength}</p>
               </Col>
               <Col className="characterSheet-traits">
                 <small>Dex</small>
-                <p>{skillModifier(character.dexterityModifier)}</p>
-                <p>{character.dexterity}</p>
+                <p>{skillModifier(character?.dexterityModifier)}</p>
+                <p>{character?.dexterity}</p>
               </Col>
               <Col className="characterSheet-traits">
                 <small>Con</small>
-                <p>{skillModifier(character.constitutionModifier)}</p>
-                <p>{character.constitution}</p>
+                <p>{skillModifier(character?.constitutionModifier)}</p>
+                <p>{character?.constitution}</p>
               </Col>
               <Col className="characterSheet-traits">
                 <small>Wis</small>
-                <p>{skillModifier(character.wisdomModifier)}</p>
-                <p>{character.wisdom}</p>
+                <p>{skillModifier(character?.wisdomModifier)}</p>
+                <p>{character?.wisdom}</p>
               </Col>
               <Col className="characterSheet-traits">
                 <small>Int</small>
-                <p>{skillModifier(character.intelligenceModifier)}</p>
-                <p>{character.intelligence}</p>
+                <p>{skillModifier(character?.intelligenceModifier)}</p>
+                <p>{character?.intelligence}</p>
               </Col>
               <Col className="characterSheet-traits">
                 <small>Cha</small>
-                <p>{skillModifier(character.charismaModifier)}</p>
-                <p>{character.charisma}</p>
+                <p>{skillModifier(character?.charismaModifier)}</p>
+                <p>{character?.charisma}</p>
               </Col>
             </Row>
             <h4 className="mb-4">
