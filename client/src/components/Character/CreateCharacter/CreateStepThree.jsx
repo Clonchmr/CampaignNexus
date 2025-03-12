@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { ThemeContext } from "../../../ThemeContext/ThemeContext";
 import { useContext } from "react";
+import { AbilityScoreRoller } from "./AbilityScoreRoller";
 
 export const CreateStepThree = ({
   character,
@@ -90,6 +91,7 @@ export const CreateStepThree = ({
           </Col>
         </Row>
       </Form.Group>
+      <AbilityScoreRoller />
       <Row>
         <Col>
           <Button

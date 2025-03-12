@@ -79,3 +79,16 @@
   width: 14rem;
   margin: auto;
 }
+
+.abilityScoreRollNumber {
+  font-size: 4rem;
+}
+
+.crossed-out {
+  text-decoration: line-through solid;
+  text-decoration-thickness: 3px;
+}
+
+#rollTotal {
+  font-size: 6rem;
+}
