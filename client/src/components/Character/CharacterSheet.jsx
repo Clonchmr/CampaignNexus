@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getCharacterById } from "../../managers/characterManager";
+import {
+  getCharacterById,
+  updateCharacter,
+} from "../../managers/characterManager";
 import {
   Button,
   Col,
   Container,
+  Form,
   Image,
   Row,
   Toast,
@@ -24,6 +28,7 @@ export const CharacterSheet = ({ darkMode, loggedInUser }) => {
   const [armorClass, setArmorClass] = useState(10);
   const [showLevelModal, setShowLevelModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
+  const [editCharacter, setEditCharacter] = useState(false);
 
   const { characterId } = useParams();
   const navigate = useNavigate();
@@ -33,13 +38,21 @@ export const CharacterSheet = ({ darkMode, loggedInUser }) => {
   const deleteModalToggle = () => setDeleteModal(!deleteModal);
 
   useEffect(() => {
-    getCharacterById(characterId).then(setCharacter);
+    getCharacterById(characterId).then((fetchedCharacter) => {
+      if (fetchedCharacter) {
+        setCharacter({
+          ...fetchedCharacter,
+          feet: fetchedCharacter.height?.split("'")[0] || "",
+          inches: fetchedCharacter.height?.split("'")[1] || "",
+        });
+      }
+    });
   }, [characterId]);
 
   useEffect(() => {
-    let armorClassValue = character.dexterityModifier;
+    let armorClassValue = character?.dexterityModifier;
 
-    character.characterItems?.map(
+    character?.characterItems?.map(
       (i) => i.isEquipped && (armorClassValue += i.item?.armorClass)
     );
 
@@ -49,6 +62,32 @@ export const CharacterSheet = ({ darkMode, loggedInUser }) => {
       setArmorClass(armorClassValue);
     }
   }, [character]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+
+    setCharacter((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleUpdateCharacter = () => {
+    const characterObj = {
+      id: character.id,
+      name: character.name,
+      height: `${character.feet}'${character.inches}`,
+      weight: character.weight,
+      gender: character.gender,
+      faith: character.faith,
+      alignmentId: character.alignmentId,
+      backstory: character.backstory,
+    };
+
+    updateCharacter(characterObj).then(() =>
+      getCharacterById(characterId).then(setCharacter)
+    );
+  };
 
   const handleSkillRoll = (i, skillName, modifier) => {
     const roll = Math.floor(Math.random() * (21 - 1) + 1) + modifier;
@@ -63,23 +102,23 @@ export const CharacterSheet = ({ darkMode, loggedInUser }) => {
   };
 
   const skillsArray = [
-    { name: "Acrobatics", modifier: character.dexterityModifier },
-    { name: "Animal Handling", modifier: character.wisdomModifier },
-    { name: "Arcana", modifier: character.intelligenceModifier },
-    { name: "Athletics", modifier: character.intelligenceModifier },
-    { name: "Deception", modifier: character.charismaModifier },
-    { name: "History", modifier: character.intelligenceModifier },
-    { name: "Insight", modifier: character.wisdomModifier },
-    { name: "Intimidation", modifier: character.charismaModifier },
-    { name: "Medicine", modifier: character.wisdomModifier },
-    { name: "Nature", modifier: character.intelligenceModifier },
-    { name: "Perception", modifier: character.wisdomModifier },
-    { name: "Performance", modifier: character.charismaModifier },
-    { name: "Persuasion", modifier: character.charismaModifier },
-    { name: "Religion", modifier: character.wisdomModifier },
-    { name: "Sleight of Hand", modifier: character.dexterityModifier },
-    { name: "Stealth", modifier: character.dexterityModifier },
-    { name: "Survival", modifier: character.wisdomModifier },
+    { name: "Acrobatics", modifier: character?.dexterityModifier },
+    { name: "Animal Handling", modifier: character?.wisdomModifier },
+    { name: "Arcana", modifier: character?.intelligenceModifier },
+    { name: "Athletics", modifier: character?.intelligenceModifier },
+    { name: "Deception", modifier: character?.charismaModifier },
+    { name: "History", modifier: character?.intelligenceModifier },
+    { name: "Insight", modifier: character?.wisdomModifier },
+    { name: "Intimidation", modifier: character?.charismaModifier },
+    { name: "Medicine", modifier: character?.wisdomModifier },
+    { name: "Nature", modifier: character?.intelligenceModifier },
+    { name: "Perception", modifier: character?.wisdomModifier },
+    { name: "Performance", modifier: character?.charismaModifier },
+    { name: "Persuasion", modifier: character?.charismaModifier },
+    { name: "Religion", modifier: character?.wisdomModifier },
+    { name: "Sleight of Hand", modifier: character?.dexterityModifier },
+    { name: "Stealth", modifier: character?.dexterityModifier },
+    { name: "Survival", modifier: character?.wisdomModifier },
   ];
   const skillModifier = (modifier) => {
     if (modifier >= 0) {
@@ -102,12 +141,29 @@ export const CharacterSheet = ({ darkMode, loggedInUser }) => {
             </Button>
           </Col>
           <Col>
-            <Button className="btn-primary">Edit Character</Button>
+            {!editCharacter ? (
+              <Button
+                className="btn-primary"
+                onClick={() => setEditCharacter(!editCharacter)}
+              >
+                Edit Character
+              </Button>
+            ) : (
+              <Button
+                className="btn-primary"
+                onClick={() => {
+                  handleUpdateCharacter();
+                  setEditCharacter(false);
+                }}
+              >
+                Finish Editing
+              </Button>
+            )}
           </Col>
           <Col className="characterSheet-traits">
             <span>
               <h6>Initiative</h6>
-              {skillModifier(character.dexterityModifier)}
+              {skillModifier(character?.dexterityModifier)}
             </span>
           </Col>
 
@@ -120,43 +176,53 @@ export const CharacterSheet = ({ darkMode, loggedInUser }) => {
           <Col className="characterSheet-traits">
             <span>
               <h6>Speed</h6>
-              {character.species?.speed}
+              {character?.species?.speed}
             </span>
           </Col>
           <Col className="characterSheet-traits">
             <span>
               <h6>HP</h6>
-              {character.hitPoints}
+              {character?.hitPoints}
             </span>
           </Col>
         </Row>
         <Row>
           <Col>
             <Image
-              alt={`Image for character ${character.name}`}
-              src={character.characterPicUrl}
+              alt={`Image for character ${character?.name}`}
+              src={character?.characterPicUrl}
               style={{ maxWidth: "15rem" }}
             />
           </Col>
           <Col>
-            <h4>{character.name}</h4>
-            <p>Level: {character.level}</p>
-            <p>{character.species?.speciesName}</p>
-            {character.subClass && <p>{character.subClass?.name}</p>}
-            <p>{character.class?.className}</p>
+            {!editCharacter ? (
+              <h4>{character?.name}</h4>
+            ) : (
+              <Form.Control
+                type="text"
+                name="name"
+                data-bs-theme={darkMode ? "dark" : "light"}
+                value={character?.name}
+                onChange={(e) => handleInputChange(e)}
+              />
+            )}
+            <p>Level: {character?.level}</p>
+            <p>{character?.species?.speciesName}</p>
+            {character?.subClass && <p>{character.subClass?.name}</p>}
+            <p>{character?.class?.className}</p>
           </Col>
           <Col className="characterSheet-traits">
             <h6>STR</h6>
             <Button
               className="characterSheet-abilityScore-btn"
               onClick={() =>
-                handleSkillRoll(0, "Strength", character.strengthModifier)
+                handleSkillRoll(0, "Strength", character?.strengthModifier)
               }
             >
               {" "}
-              {skillModifier(character.strengthModifier)}
+              {skillModifier(character?.strengthModifier)}
             </Button>
-            <p className="characterSheet-abilityScore">{character.strength}</p>
+            <p className="characterSheet-abilityScore">{character?.strength}</p>
           </Col>
           <Col className="characterSheet-traits">
             <h6>DEX</h6>
@@ -167,9 +233,11 @@ export const CharacterSheet = ({ darkMode, loggedInUser }) => {
               }
             >
               {" "}
-              {skillModifier(character.dexterityModifier)}{" "}
+              {skillModifier(character?.dexterityModifier)}{" "}
             </Button>
-            <p className="characterSheet-abilityScore">{character.dexterity}</p>
+            <p className="characterSheet-abilityScore">
+              {character?.dexterity}
+            </p>
           </Col>
           <Col className="characterSheet-traits">
             <h6>CON</h6>
@@ -179,15 +247,15 @@ export const CharacterSheet = ({ darkMode, loggedInUser }) => {
                 handleSkillRoll(
                   0,
                   "Constitution",
-                  character.constitutionModifier
+                  character?.constitutionModifier
                 )
               }
             >
               {" "}
-              {skillModifier(character.constitutionModifier)}{" "}
+              {skillModifier(character?.constitutionModifier)}{" "}
             </Button>
             <p className="characterSheet-abilityScore">
-              {character.constitution}
+              {character?.constitution}
             </p>
           </Col>
           <Col className="characterSheet-traits">
@@ -195,13 +263,13 @@ export const CharacterSheet = ({ darkMode, loggedInUser }) => {
             <Button
               className="characterSheet-abilityScore-btn"
               onClick={() =>
-                handleSkillRoll(0, "Wisdom", character.wisdomModifier)
+                handleSkillRoll(0, "Wisdom", character?.wisdomModifier)
               }
             >
               {" "}
-              {skillModifier(character.wisdomModifier)}{" "}
+              {skillModifier(character?.wisdomModifier)}{" "}
             </Button>
-            <p className="characterSheet-abilityScore">{character.wisdom}</p>
+            <p className="characterSheet-abilityScore">{character?.wisdom}</p>
           </Col>
           <Col className="characterSheet-traits">
             <h6>INT</h6>
@@ -211,14 +279,14 @@ export const CharacterSheet = ({ darkMode, loggedInUser }) => {
                 handleSkillRoll(
                   0,
                   "Intelligence",
-                  character.intelligenceModifier
+                  character?.intelligenceModifier
                 )
               }
             >
-              {skillModifier(character.intelligenceModifier)}{" "}
+              {skillModifier(character?.intelligenceModifier)}{" "}
             </Button>
             <p className="characterSheet-abilityScore">
-              {character.intelligence}
+              {character?.intelligence}
             </p>
           </Col>
           <Col className="characterSheet-traits">
@@ -226,12 +294,12 @@ export const CharacterSheet = ({ darkMode, loggedInUser }) => {
             <Button
               className="characterSheet-abilityScore-btn"
               onClick={() =>
-                handleSkillRoll(0, "Charisma", character.charismaModifier)
+                handleSkillRoll(0, "Charisma", character?.charismaModifier)
               }
             >
-              {skillModifier(character.charismaModifier)}{" "}
+              {skillModifier(character?.charismaModifier)}{" "}
             </Button>
-            <p className="characterSheet-abilityScore">{character.charisma}</p>
+            <p className="characterSheet-abilityScore">{character?.charisma}</p>
           </Col>
         </Row>
         <Row>
@@ -252,20 +320,25 @@ export const CharacterSheet = ({ darkMode, loggedInUser }) => {
             <Row>
               <h4>Saving Throws</h4>
               <Col>
-                <p>{`Str ${skillModifier(character.strengthModifier)}`} </p>
-                <p>{`Dex ${skillModifier(character.dexterityModifier)}`}</p>
+                <p>{`Str ${skillModifier(character?.strengthModifier)}`} </p>
+                <p>{`Dex ${skillModifier(character?.dexterityModifier)}`}</p>
               </Col>
               <Col>
-                <p>{`Con ${skillModifier(character.constitutionModifier)}`}</p>
-                <p>{`Int ${skillModifier(character.intelligenceModifier)}`}</p>
+                <p>{`Con ${skillModifier(character?.constitutionModifier)}`}</p>
+                <p>{`Int ${skillModifier(character?.intelligenceModifier)}`}</p>
               </Col>
               <Col>
-                <p>{`Wis ${skillModifier(character.wisdomModifier)}`}</p>
-                <p>{`Cha ${skillModifier(character.charismaModifier)}`}</p>
+                <p>{`Wis ${skillModifier(character?.wisdomModifier)}`}</p>
+                <p>{`Cha ${skillModifier(character?.charismaModifier)}`}</p>
               </Col>
             </Row>
             <Container className="mt-5">
-              <CharacterNav character={character} setCharacter={setCharacter} />
+              <CharacterNav
+                character={character}
+                setCharacter={setCharacter}
+                handleInputChange={handleInputChange}
+                editCharacter={editCharacter}
+              />
             </Container>
           </Col>
         </Row>
@@ -287,7 +360,7 @@ export const CharacterSheet = ({ darkMode, loggedInUser }) => {
             <Toast.Body>{toastTarget.roll}</Toast.Body>
           </Toast>
         </ToastContainer>
-        {loggedInUser.id === character.userId && (
+        {loggedInUser.id === character?.userId && (
           <Button className="mt-3" onClick={deleteModalToggle}>
             Delete Character
           </Button>

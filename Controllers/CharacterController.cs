@@ -354,11 +354,11 @@ public class CharacterController : ControllerBase
 
             foundCharacter.Name = character.Name;
             foundCharacter.Weight = character.Weight;
+            foundCharacter.Height = character.Height;
             foundCharacter.Gender = character.Gender;
             foundCharacter.AlignmentId = character.AlignmentId;
             foundCharacter.Faith = character.Faith;
             foundCharacter.Backstory = character.Backstory;
-            foundCharacter.CharacterPicUrl = character.CharacterPicUrl;
 
             _dbContext.SaveChanges();
 

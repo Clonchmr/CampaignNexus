@@ -95,7 +95,7 @@ export const levelUpCharacter = async (levelUpObject) => {
 };
 
 //Updates a characters information
-//Expects an object with name, height, weight, gender, faith, backstory, alignmentId, and characterPicUrl
+//Expects an object with name, height, weight, gender, faith, backstory, and alignmentId
 export const updateCharacter = async (characterObj) => {
   const response = await fetch(`${_apiString}/update/${characterObj.id}`, {
     method: "PUT",
