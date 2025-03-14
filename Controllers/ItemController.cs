@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using CampaignNexus.Data;
 using CampaignNexus.Models;
 using CampaignNexus.Models.DTOs;
@@ -69,6 +70,47 @@ public class ItemController : ControllerBase
         {
             Console.Error.WriteLine($"Error in GetAllItems {ex}");
             return StatusCode(500, "An error occurred retrieving items");
+        }
+    }
+
+    //Creates a new CharacterItem entity, adding an item to a character
+    [HttpPost("characterAdd/{itemId}")]
+    [Authorize]
+    public IActionResult AddToCharacter(int itemId, [FromQuery, Required] int characterId, [FromQuery, Required] int quantity)
+    {
+        try
+        {
+            //Finds the item to be added, along with the character the item is being added to, and ensures they both exist
+            Item item = _dbContext
+            .Items
+            .SingleOrDefault(i => i.Id == itemId);
+
+            Character character = _dbContext
+            .Characters
+            .SingleOrDefault(c => c.Id == characterId);
+
+            if (item == null || character == null) 
+            {
+                return NotFound("That item or character does not exist");
+            }
+
+            CharacterItem newCharacterItem = new CharacterItem
+            {
+                ItemId = itemId,
+                CharacterId = characterId,
+                Quantity = quantity
+            };
+
+            _dbContext.CharacterItems.Add(newCharacterItem);
+            _dbContext.SaveChanges();
+
+            return Created($"api/characterItems/{newCharacterItem.Id}", newCharacterItem);
+
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error in AddToCharacter {ex}");
+            return StatusCode(500, "There was an error adding that item to your character");
         }
     }
 }

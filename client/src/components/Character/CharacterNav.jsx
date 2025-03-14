@@ -15,6 +15,7 @@ import { toggleEquipItem } from "../../managers/itemManager";
 import { getCharacterById } from "../../managers/characterManager";
 import { SpellOffcanvas } from "../OffCanvas/SpellOffcanvas";
 import { getAllAlignments } from "../../managers/alignmentManager";
+import { AddItemOffcanvas } from "../OffCanvas/AddItemOffcanvas";
 
 export const CharacterNav = ({
   character,
@@ -25,11 +26,13 @@ export const CharacterNav = ({
   const [spellSaveDc, setSpellSaveDc] = useState(0);
   const [spellAttack, setSpellAttack] = useState(0);
   const [spellOffcanvas, setSpellOffcanvas] = useState(false);
+  const [itemOffCanvas, setItemOffcanvas] = useState(false);
   const [spellTarget, setSpellTarget] = useState({});
   const [alignments, setAlignments] = useState([]);
   const { darkMode, setDarkMode } = useContext(ThemeContext);
 
   const spellOffCanvasToggle = () => setSpellOffcanvas(!spellOffcanvas);
+  const itemOffCanvasToggle = () => setItemOffcanvas(!itemOffCanvas);
 
   useEffect(() => {
     const cClass = character?.class?.className;
@@ -190,6 +193,7 @@ export const CharacterNav = ({
                 <Button
                   className="btn-primary"
                   style={{ height: "2rem", fontSize: "0.8rem" }}
+                  onClick={itemOffCanvasToggle}
                 >
                   Add Item
                 </Button>
@@ -234,6 +238,12 @@ export const CharacterNav = ({
             ))}
           </tbody>
         </Table>
+        <AddItemOffcanvas
+          itemOffCanvasToggle={itemOffCanvasToggle}
+          itemOffCanvas={itemOffCanvas}
+          character={character}
+          setCharacter={setCharacter}
+        />
       </Tab>
       <Tab eventKey="Info" title="Info">
         <h6 className="mt-4 mb-2">Characteristics</h6>
