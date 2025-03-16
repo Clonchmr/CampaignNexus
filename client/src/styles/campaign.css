@@ -18,6 +18,7 @@
   width: 71%;
   display: flex;
   justify-content: flex-end;
+  margin-left: 2.5rem;
 }
 
 .campaignDescription-image {
