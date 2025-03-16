@@ -58,6 +58,7 @@ export const InviteDetailsModal = ({
         <Container>
           <Image
             alt={`Image for the campaign ${target?.campaignname}`}
+            style={{ maxWidth: "40rem", maxHeight: "15rem" }}
             src={target?.campaignPicUrl}
             className="mb-4"
           />

@@ -6,8 +6,7 @@
   --card-background: #ceb28d;
   --card-text: #201d1e;
   --card-border: #774e24;
-  --text-color: #201d1e;
-  --text-shadow: white;
+  --text-color: #f2e9e4;
 }
 
 [data-theme="dark"] {
