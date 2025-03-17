@@ -38,6 +38,7 @@ export const AddItemOffcanvas = ({
       onHide={itemOffCanvasToggle}
       placement="end"
       data-bs-theme={darkMode ? "dark" : "light"}
+      style={{ width: "30%" }}
     >
       <Offcanvas.Header closeButton></Offcanvas.Header>
       <Offcanvas.Body>

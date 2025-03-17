@@ -62,10 +62,17 @@ export const CharacterNav = ({
 
   useEffect(() => {
     getAllAlignments().then(setAlignments);
-    const characterData = { ...character };
-    characterData.feet = character?.height?.split("'")[0];
-    characterData.inches = character?.height?.split("'")[1];
-    setCharacter(characterData);
+
+    if (character?.height) {
+      const [feet, inches] = character.height
+        .split("'")
+        .map((num) => num.trim());
+      setCharacter((prevCharacter) => ({
+        ...prevCharacter,
+        feet: feet || "0",
+        inches: inches || "0",
+      }));
+    }
   }, []);
   return (
     <Tabs defaultActiveKey="Actions" id="characterSheet-nav" fill>
@@ -81,7 +88,7 @@ export const CharacterNav = ({
           </thead>
           <tbody>
             {character?.characterItems
-              ?.filter((ci) => ci.item?.itemType === "Weapon")
+              ?.filter((ci) => ci.item?.itemType === "Weapon" && ci.isEquipped)
               .map((i, index) => (
                 <tr key={index}>
                   <td className="characterSheet-navTable">
@@ -115,12 +122,6 @@ export const CharacterNav = ({
                   <td>{a.ability?.notes}</td>
                 </tr>
               ))}
-            {/* <tr>
-              <td>Unarmed Strike</td>
-              <td>5 ft.</td>
-              <td>{character.strengthModifier + 1}</td>
-              <td></td>
-            </tr> */}
           </tbody>
         </Table>
       </Tab>
@@ -215,24 +216,28 @@ export const CharacterNav = ({
                 <td>{i.quantity}</td>
                 <td>{i.item?.notes}</td>
                 <td>
-                  <Form>
-                    <Form.Group>
-                      <Form.Label>Equipped</Form.Label>
-                      <Form.Check
-                        checked={i.isEquipped}
-                        onClick={(e) => e.stopPropagation()}
-                        onChange={() => {
-                          {
-                            toggleEquipItem(i.id).then(() => {
-                              getCharacterById(character?.id).then(
-                                setCharacter
-                              );
-                            });
-                          }
-                        }}
-                      />
-                    </Form.Group>
-                  </Form>
+                  {i.item?.itemType !== "Consumable" ? (
+                    <Form>
+                      <Form.Group>
+                        <Form.Label>Equipped</Form.Label>
+                        <Form.Check
+                          checked={i.isEquipped}
+                          onClick={(e) => e.stopPropagation()}
+                          onChange={() => {
+                            {
+                              toggleEquipItem(i.id).then(() => {
+                                getCharacterById(character?.id).then(
+                                  setCharacter
+                                );
+                              });
+                            }
+                          }}
+                        />
+                      </Form.Group>
+                    </Form>
+                  ) : (
+                    <Button>Use</Button>
+                  )}
                 </td>
               </tr>
             ))}
@@ -305,7 +310,7 @@ export const CharacterNav = ({
                       type="number"
                       name="feet"
                       data-bs-theme={darkMode ? "dark" : "light"}
-                      value={character?.feet}
+                      value={character?.feet || ""}
                       onChange={(e) => handleInputChange(e)}
                     />
                   </Col>
@@ -315,7 +320,7 @@ export const CharacterNav = ({
                       type="number"
                       name="inches"
                       data-bs-theme={darkMode ? "dark" : "light"}
-                      value={character?.inches}
+                      value={character?.inches || ""}
                       onChange={(e) => handleInputChange(e)}
                     />
                   </Col>

@@ -192,6 +192,7 @@ export const CharacterSheet = ({ darkMode, loggedInUser }) => {
               alt={`Image for character ${character?.name}`}
               src={character?.characterPicUrl}
               style={{ maxWidth: "15rem" }}
+              className="campaignDescription-image"
             />
           </Col>
           <Col>
@@ -303,21 +304,27 @@ export const CharacterSheet = ({ darkMode, loggedInUser }) => {
           </Col>
         </Row>
         <Row>
-          <Col className="characterSheet-skills-container mt-5">
+          <Col md={3} className="characterSheet-skills-container  pe-3 mt-5">
             {skillsArray.map((s, i) => (
               <p key={i}>
-                {`${s.name} ${skillModifier(s.modifier)}`}{" "}
-                <FontAwesomeIcon
-                  icon="fa-solid fa-dice-d20"
-                  className={`${shakingIcon[i] ? "fa-shake" : ""} diceIcon`}
-                  style={{ color: "#6e0d25" }}
-                  onClick={() => handleSkillRoll(i, s.name, s.modifier)}
-                />
+                <Row>
+                  <Col className="text-start ps-5" md={10}>{`${
+                    s.name
+                  } ${skillModifier(s.modifier)}`}</Col>
+                  <Col md={2}>
+                    <FontAwesomeIcon
+                      icon="fa-solid fa-dice-d20"
+                      className={`${shakingIcon[i] ? "fa-shake" : ""} diceIcon`}
+                      style={{ color: "#6e0d25" }}
+                      onClick={() => handleSkillRoll(i, s.name, s.modifier)}
+                    />
+                  </Col>
+                </Row>
               </p>
             ))}
           </Col>
-          <Col className="characterSheet-savingThrowsColumn">
-            <Row>
+          <Col md={8} className="mt-5 ms-5">
+            <Row className="characterSheet-savingThrowsColumn me-auto">
               <h4>Saving Throws</h4>
               <Col>
                 <p>{`Str ${skillModifier(character?.strengthModifier)}`} </p>
@@ -332,7 +339,7 @@ export const CharacterSheet = ({ darkMode, loggedInUser }) => {
                 <p>{`Cha ${skillModifier(character?.charismaModifier)}`}</p>
               </Col>
             </Row>
-            <Container className="mt-5">
+            <Container className="mt-5 characterSheet-savingThrowsColumn p-4">
               <CharacterNav
                 character={character}
                 setCharacter={setCharacter}
@@ -342,6 +349,7 @@ export const CharacterSheet = ({ darkMode, loggedInUser }) => {
             </Container>
           </Col>
         </Row>
+
         <ToastContainer className="toastContainer p-5" position="bottom-end">
           <Toast
             onClose={toastToggle}
