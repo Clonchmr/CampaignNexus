@@ -16,6 +16,7 @@ import { getCharacterById } from "../../managers/characterManager";
 import { SpellOffcanvas } from "../OffCanvas/SpellOffcanvas";
 import { getAllAlignments } from "../../managers/alignmentManager";
 import { AddItemOffcanvas } from "../OffCanvas/AddItemOffcanvas";
+import { useConsumable } from "../../managers/characterItem";
 
 export const CharacterNav = ({
   character,
@@ -74,6 +75,13 @@ export const CharacterNav = ({
       }));
     }
   }, []);
+
+  const handleUseConsumable = (e, characterConsumableId) => {
+    e.stopPropagation();
+    useConsumable(characterConsumableId).then(() => {
+      getCharacterById(character.id).then(setCharacter);
+    });
+  };
   return (
     <Tabs defaultActiveKey="Actions" id="characterSheet-nav" fill>
       <Tab eventKey="Actions" title="Actions">
@@ -236,7 +244,9 @@ export const CharacterNav = ({
                       </Form.Group>
                     </Form>
                   ) : (
-                    <Button>Use</Button>
+                    <Button onClick={(e) => handleUseConsumable(e, i.id)}>
+                      Use
+                    </Button>
                   )}
                 </td>
               </tr>
