@@ -5,6 +5,7 @@
   width: max-content;
   padding: 0.7rem 0;
   background-color: rgba(119, 78, 36, 0.6);
+  margin: 0 0.5rem;
 }
 
 .characterSheet-abilityScore {
@@ -21,7 +22,21 @@
   border-radius: 1rem;
   padding: 1.6rem 0;
   margin-right: 1.7rem;
+  margin-left: 1rem;
 }
+
+.characterSheet-skills-container {
+  background-color: rgba(119, 78, 36, 0.5);
+  border: 1px ridge var(--primary);
+  border-radius: 1rem;
+  margin: 0 1rem;
+  padding: 1rem 0;
+}
+
+/* .characterSheet-skills-container p {
+  width: max-content;
+  margin: 1rem auto;
+} */
 
 .characterSheet-abilityScore-btn {
   background-color: transparent;
