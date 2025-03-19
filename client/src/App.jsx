@@ -18,7 +18,7 @@ function App() {
   }, []);
 
   return loggedInUser === undefined ? (
-    <Spinner animation="border" role="status" />
+    <Spinner id="spinnerIcon" animation="border" role="status" />
   ) : (
     <>
       <ApplicationViews
