@@ -1,13 +1,15 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../../managers/authManager";
 import { Button, Form, Alert, Container } from "react-bootstrap";
+import { ThemeContext } from "../../ThemeContext/ThemeContext";
 
 export default function Login({ setLoggedInUser }) {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [failedLogin, setFailedLogin] = useState(false);
+  const { darkMode } = useContext(ThemeContext);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -29,8 +31,9 @@ export default function Login({ setLoggedInUser }) {
         <Form.Group>
           <Form.Label>Email</Form.Label>
           <Form.Control
+            data-bs-theme={darkMode ? "dark" : "light"}
             type="text"
-            className="lowerCaseFont"
+            className="lowerCaseFont mb-3"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -40,6 +43,8 @@ export default function Login({ setLoggedInUser }) {
           <Form.Control
             type="password"
             value={password}
+            className="mb-3"
+            data-bs-theme={darkMode ? "dark" : "light"}
             onChange={(e) => setPassword(e.target.value)}
           />
         </Form.Group>
