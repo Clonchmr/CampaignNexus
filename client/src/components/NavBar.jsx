@@ -151,6 +151,7 @@ export const NavBar = ({
                 <Form.Check
                   type="switch"
                   id="darkMode-switch"
+                  className="me-3 mt-2"
                   checked={darkMode}
                   onChange={() => setDarkMode(!darkMode)}
                   label={darkMode ? "🌙" : "🔆"}
