@@ -19,6 +19,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { CharacterNav } from "./CharacterNav";
 import { CharacterLevelUpModal } from "../Modals/Character/CharacterLevelUpModal";
 import { DeleteCharacterModal } from "../Modals/Character/DeleteCharacterModal";
+import DefaultCharacterImage from "../../assets/images/DefaultCharacterImage.jpg";
 
 export const CharacterSheet = ({ darkMode, loggedInUser }) => {
   const [character, setCharacter] = useState({});
@@ -190,7 +191,11 @@ export const CharacterSheet = ({ darkMode, loggedInUser }) => {
           <Col>
             <Image
               alt={`Image for character ${character?.name}`}
-              src={character?.characterPicUrl}
+              src={
+                character?.characterPicUrl
+                  ? character.characterPicUrl
+                  : DefaultCharacterImage
+              }
               style={{ maxWidth: "15rem" }}
               className="campaignDescription-image"
             />

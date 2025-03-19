@@ -275,6 +275,7 @@ public class CharacterController : ControllerBase
                 return BadRequest("Class does not exist");
             }
 
+           
             Character characterToAdd = new Character
             {
                 UserId = character.UserId,

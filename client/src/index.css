@@ -1,7 +1,6 @@
 @import "./styles/themes.css";
 
 :root {
-  /* font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif; */
   font-family: "Cinzel Decorative", serif;
   line-height: 1.5;
   font-weight: 400;
@@ -127,4 +126,11 @@ input[type="number"]::-webkit-inner-spin-button {
 /* For Firefox */
 input[type="number"] {
   -moz-appearance: textfield;
+}
+
+#spinnerIcon {
+  width: 4rem;
+  height: 4rem;
+  border-width: 0.5rem;
+  margin-top: 15rem;
 }
