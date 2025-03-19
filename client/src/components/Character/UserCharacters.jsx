@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getCharacters } from "../../managers/characterManager";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import DefaultCharacterImage from "../../assets/images/DefaultCharacterImage.jpg";
 
 export const UserCharacters = ({ loggedInUser, darkMode }) => {
   const [characters, setCharacters] = useState([]);
@@ -33,7 +34,11 @@ export const UserCharacters = ({ loggedInUser, darkMode }) => {
               <Col>
                 <Card.Img
                   alt={`Character picture for ${c.name}`}
-                  src={c.characterPicUrl}
+                  src={
+                    c.characterPicUrl
+                      ? c.characterPicUrl
+                      : DefaultCharacterImage
+                  }
                   style={{ maxWidth: "15rem" }}
                 />
               </Col>
