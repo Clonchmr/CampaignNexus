@@ -334,6 +334,9 @@ public class CampaignController : ControllerBase
         {
             Console.Error.WriteLine($"Error in DeleteCampaign {ex}");
             return StatusCode(500, "An error occurred while deleting that campaign");
+
+
+            
         }
     }
 }
